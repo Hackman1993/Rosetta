@@ -1,0 +1,31 @@
+//
+// Created by Hackman.Lo on 3/23/2023.
+//
+
+#ifndef ROSETTA_MYSQL_CONNECTION_H
+#define ROSETTA_MYSQL_CONNECTION_H
+#include "../common/database_connection.h"
+#include <mysql/jdbc.h>
+#include <utility>
+namespace rosetta {
+
+  class mysql_statement;
+  class mysql_connection : public database_connection<mysql_statement>{
+  public:
+    mysql_connection(std::string_view host, unsigned short port, std::string_view database, std::string_view username, std::string_view password);
+    bool connect() override;
+
+    mysql_statement prepared_statement(std::string_view sql) override;
+
+    ~mysql_connection() override;
+
+
+  protected:
+    static sql::mysql::MySQL_Driver *driver_;
+    std::unique_ptr<sql::Connection> connection_;
+    friend class mysql_statement;
+  };
+
+} // rosetta
+
+#endif //ROSETTA_MYSQL_CONNECTION_H

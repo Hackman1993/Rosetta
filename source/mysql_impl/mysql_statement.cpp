@@ -1,0 +1,54 @@
+//
+// Created by Hackman.Lo on 3/23/2023.
+//
+
+#include "mysql_impl/mysql_statement.h"
+
+#include <utility>
+#include <iostream>
+#include "mysql_impl/mysql_connection.h"
+#include "mysql_impl/mysql_result.h"
+#include "exception/database_exception.h"
+#include "common/sql_statement.h"
+
+#include <boost/algorithm/string.hpp>
+
+namespace rosetta {
+  mysql_statement::mysql_statement(mysql_connection &connection, std::string_view sql):
+    sql_statement<mysql_connection, mysql_result>(connection, sql), statement_(connection.connection_->prepareStatement(std::string(sql))) {
+//    if(connection_.mysql_ == nullptr)
+//      throw exceptions::database_exception(100003, "Session Not Connected!");
+//    stmt_ = mysql_stmt_init(connection_.mysql_);
+//    if(stmt_ == nullptr) return;
+//    auto error_code = mysql_stmt_prepare(stmt_, statement_.c_str(), statement_.length());
+//    if(error_code != 0)
+//      throw exceptions::database_exception(error_code, mysql_stmt_error(stmt_));
+  }
+
+  mysql_statement::~mysql_statement() {
+
+  }
+
+  void mysql_statement::bind_param(std::string_view name, std::string_view data) {
+  }
+
+  void mysql_statement::bind_param(std::string_view name, uint64_t data) {
+    statement_->setQueryAttrUInt64(std::string(name), data);
+  }
+  void mysql_statement::bind_param(std::string_view name, int64_t data) {
+    statement_->setQueryAttrInt64(std::string(name), data);
+  }
+
+  mysql_result mysql_statement::execute() {
+    if(boost::algorithm::istarts_with(sql_, "select")){
+      auto result = statement_->executeQuery();
+      return {0, result};
+    }else{
+      auto result = statement_->executeUpdate();
+      return {static_cast<size_t>(result), nullptr};
+    }
+
+  }
+
+
+} // rosetta
