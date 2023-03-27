@@ -13,8 +13,7 @@ namespace rosetta {
   class sql_statement_base {
   public:
     explicit sql_statement_base(std::string_view statement): sql_(statement){}
-    virtual void bind_param(std::string_view type, std::string_view data) = 0;
-    virtual void bind_param(std::string_view type, uint64_t data) = 0;
+
     virtual std::string_view to_string(){ return sql_; };
   protected:
     std::string sql_;

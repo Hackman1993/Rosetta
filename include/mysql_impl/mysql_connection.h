@@ -12,10 +12,15 @@ namespace rosetta {
   class mysql_statement;
   class mysql_connection : public database_connection<mysql_statement>{
   public:
-    mysql_connection(std::string_view host, unsigned short port, std::string_view database, std::string_view username, std::string_view password);
-    bool connect() override;
+    mysql_connection(std::string_view host, unsigned short port, std::string_view username, std::string_view password, std::string_view database);
+    void refresh() override;
+
+    void begin_transaction() override;
+    void commit_transaction() override;
 
     mysql_statement prepared_statement(std::string_view sql) override;
+
+    void close() override;
 
     ~mysql_connection() override;
 

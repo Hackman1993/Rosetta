@@ -15,7 +15,7 @@
 
 namespace rosetta {
   mysql_statement::mysql_statement(mysql_connection &connection, std::string_view sql):
-    sql_statement<mysql_connection, mysql_result>(connection, sql), statement_(connection.connection_->prepareStatement(std::string(sql))) {
+    sql_statement<mysql_connection, mysql_result, std::uint32_t>(connection, sql), statement_(connection.connection_->prepareStatement(std::string(sql))) {
 //    if(connection_.mysql_ == nullptr)
 //      throw exceptions::database_exception(100003, "Session Not Connected!");
 //    stmt_ = mysql_stmt_init(connection_.mysql_);
@@ -29,14 +29,15 @@ namespace rosetta {
 
   }
 
-  void mysql_statement::bind_param(std::string_view name, std::string_view data) {
+  void mysql_statement::bind_param(std::uint32_t param_id, std::string_view data) {
+    statement_->setString(param_id, std::string(data));
   }
 
-  void mysql_statement::bind_param(std::string_view name, uint64_t data) {
-    statement_->setQueryAttrUInt64(std::string(name), data);
+  void mysql_statement::bind_param(std::uint32_t param_id, uint64_t data) {
+    statement_->setUInt64(param_id, data);
   }
-  void mysql_statement::bind_param(std::string_view name, int64_t data) {
-    statement_->setQueryAttrInt64(std::string(name), data);
+  void mysql_statement::bind_param(std::uint32_t param_id, int64_t data) {
+    statement_->setInt64(param_id, data);
   }
 
   mysql_result mysql_statement::execute() {

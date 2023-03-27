@@ -11,14 +11,14 @@ namespace rosetta {
 
   class mysql_connection;
   class mysql_result;
-  class mysql_statement : public sql_statement<mysql_connection, mysql_result>{
+  class mysql_statement : public sql_statement<mysql_connection, mysql_result, std::uint32_t>{
   public:
     mysql_statement(mysql_connection& connection, std::string_view sql);
 
-    void bind_param(std::string_view type, std::string_view data) override;
+    void bind_param(std::uint32_t type, std::string_view data) override;
 
-    void bind_param(std::string_view type, uint64_t data) override;
-    void bind_param(std::string_view type, int64_t data);
+    void bind_param(std::uint32_t type, std::uint64_t data) override;
+    void bind_param(std::uint32_t type, std::int64_t data);
 
     mysql_result execute() override;
 

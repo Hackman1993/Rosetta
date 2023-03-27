@@ -6,31 +6,22 @@
 namespace rosetta {
   sql::mysql::MySQL_Driver *mysql_connection::driver_ = nullptr;
 
-
-
-  bool mysql_connection::connect() {
-//    mysql_ = mysql_init(nullptr);
-//    mysql_ = mysql_real_connect(mysql_, host_.c_str(), username_.c_str(), password_.c_str(), database_.c_str(), port_, nullptr, 0);
-//    return mysql_ == nullptr;
-    return true;
-  }
-
   mysql_connection::~mysql_connection() {
-    //mysql_close(mysql_);
+    std::cout << "Connection Closing" << std::endl;
   }
 
   mysql_statement mysql_connection::prepared_statement(std::string_view sql) {
     return mysql_statement(*this, sql);
   }
 
-  mysql_connection::mysql_connection(std::string_view host, unsigned short port, std::string_view database, std::string_view username, std::string_view password): database_connection(host, port, database, username, password) {
+  mysql_connection::mysql_connection(std::string_view host, unsigned short port, std::string_view username, std::string_view password, std::string_view database): database_connection(host, port, username, password, database) {
     if(driver_ == nullptr)
       driver_ = sql::mysql::get_mysql_driver_instance();
 
     if(driver_ == nullptr)
       throw database_exception(5100, "No Driver Instance Found!");
     std::stringstream sstream;
-    sstream << "tcp://" << host << ":" << port;
+    sstream << "tcp://" << host_ << ":" << port_;
     try{
       auto conn_ptr = driver_->connect(sstream.str(), username_, password_);
       connection_ = std::unique_ptr<sql::Connection>(conn_ptr);
@@ -41,5 +32,21 @@ namespace rosetta {
     {
       throw database_exception(5101, "Connection:" + std::string(e.what()));
     }
+  }
+
+  void mysql_connection::begin_transaction() {
+    connection_->setAutoCommit(false);
+  }
+
+  void mysql_connection::commit_transaction() {
+    connection_->commit();
+  }
+
+  void mysql_connection::refresh() {
+    std::cout << "refresh" << std::endl;
+  }
+
+  void mysql_connection::close() {
+    connection_->close();
   }
 }
