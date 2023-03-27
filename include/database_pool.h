@@ -30,7 +30,6 @@ namespace rosetta {
           connections_cv_.wait(lock_, [this]{ return connections_.size() < max_conn_; });
           try{
             while(connections_.size() < max_conn_){
-              std::cout << "Spawned A new Connection" << std::endl;
               connections_.emplace_back(std::make_shared<Connection>(host_, port_, username_, password_, database_));
             }
           } catch (std::exception& exception){
