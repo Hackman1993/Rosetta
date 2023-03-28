@@ -1,10 +1,7 @@
 #include <iostream>
 #include <rosetta.h>
 #include <boost/url.hpp>
-#include "mysql_impl/mysql_connection.h"
-#include "mysql_impl/mysql_statement.h"
-#include "mysql_impl/mysql_result.h"
-#include "database_pool.h"
+
 using namespace std::chrono_literals;
 int main() {
 //  rosetta::route_item item("/route/{param1}/{param2}/bacba");
