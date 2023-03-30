@@ -14,7 +14,7 @@ namespace rosetta {
   class sql_statement : public sql_statement_base{
   public:
     sql_statement(ConnectionType& connection, std::string_view sql): sql_statement_base(sql), connection_(connection){}
-    virtual ResultType execute() = 0;
+    virtual std::shared_ptr<ResultType> execute() = 0;
 
     virtual void bind_param(ParamIndexType type, std::string_view data) = 0;
     virtual void bind_param(ParamIndexType type, uint64_t data) = 0;

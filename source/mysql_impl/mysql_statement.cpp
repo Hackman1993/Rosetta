@@ -40,13 +40,13 @@ namespace rosetta {
     statement_->setInt64(param_id, data);
   }
 
-  mysql_result mysql_statement::execute() {
+  std::shared_ptr<mysql_result> mysql_statement::execute() {
     if(boost::algorithm::istarts_with(sql_, "select")){
       auto result = statement_->executeQuery();
-      return {0, result};
+      return std::make_unique<mysql_result>(0, result);
     }else{
       auto result = statement_->executeUpdate();
-      return {static_cast<size_t>(result), nullptr};
+      return std::make_unique<mysql_result>(result, nullptr);
     }
 
   }

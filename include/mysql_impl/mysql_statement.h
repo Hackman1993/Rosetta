@@ -20,7 +20,7 @@ namespace rosetta {
     void bind_param(std::uint32_t type, std::uint64_t data) override;
     void bind_param(std::uint32_t type, std::int64_t data);
 
-    mysql_result execute() override;
+    std::shared_ptr<mysql_result> execute() override;
 
     ~mysql_statement();
   private:
