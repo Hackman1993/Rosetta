@@ -11,6 +11,15 @@ namespace rosetta {
 
   class mysql_connection;
   class mysql_result;
+
+  struct statement_deleter{
+    void operator()(sql::PreparedStatement* ptr) {
+      if(ptr != nullptr) {
+        ptr->close();
+        delete ptr;
+      }
+    }
+  };
   class mysql_statement : public sql_statement<mysql_connection, mysql_result, std::uint32_t>{
   public:
     mysql_statement(mysql_connection& connection, std::string_view sql);
@@ -24,7 +33,7 @@ namespace rosetta {
 
     ~mysql_statement();
   private:
-    std::unique_ptr<sql::PreparedStatement> statement_;
+    std::unique_ptr<sql::PreparedStatement, statement_deleter> statement_;
   };
 
 } // rosetta

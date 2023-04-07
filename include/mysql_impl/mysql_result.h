@@ -9,6 +9,15 @@
 #include <mysql/jdbc.h>
 namespace rosetta {
 
+  struct result_deleter{
+    void operator()(sql::ResultSet* ptr) {
+      if(ptr != nullptr) {
+        ptr->close();
+        delete ptr;
+      }
+    }
+  };
+
   class mysql_result : public sql_result{
   public:
     mysql_result(std::size_t affected, sql::ResultSet* result);
@@ -46,7 +55,7 @@ namespace rosetta {
 
   protected:
     void _move_cursor(std::size_t cursor);
-    std::unique_ptr<sql::ResultSet> result_;
+    std::unique_ptr<sql::ResultSet, result_deleter> result_;
   };
 
 } // rosetta

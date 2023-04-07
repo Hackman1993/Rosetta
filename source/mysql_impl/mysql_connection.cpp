@@ -43,12 +43,19 @@ namespace rosetta {
   }
 
   void mysql_connection::refresh() {
-    auto stmt = connection_->prepareStatement("select 1");
-    if(stmt->execute())
-    {
-      last_active_ = std::chrono::steady_clock::now();
-    }else{
-      // TODO: Handle When Failed To Refresh
+    try{
+      std::shared_ptr<sql::PreparedStatement> stmt(connection_->prepareStatement("select 1"), [](sql::PreparedStatement* pointer){
+        pointer->close();
+        delete pointer;
+      });
+      if(stmt->execute())
+      {
+        last_active_ = std::chrono::steady_clock::now();
+      }else{
+        // TODO: Handle When Failed To Refresh
+      }
+    } catch (std::exception& e){
+      std::cout << e.what() << std::endl;
     }
   }
 
