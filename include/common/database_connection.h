@@ -16,7 +16,7 @@ namespace rosetta {
     virtual void begin_transaction() = 0;
     virtual void commit_transaction() = 0;
     virtual void refresh() = 0;
-    virtual StatementType prepared_statement(std::string_view sql) = 0;
+    virtual std::shared_ptr<StatementType> prepared_statement(std::string_view sql) = 0;
   protected:
   };
 

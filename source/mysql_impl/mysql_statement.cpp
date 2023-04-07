@@ -30,21 +30,21 @@ namespace rosetta {
   }
 
   void mysql_statement::bind_param(std::uint32_t param_id, std::string_view data) {
-    statement_->setString(param_id, std::string(data));
+    statement_->setString(param_id+1, std::string(data));
   }
 
   void mysql_statement::bind_param(std::uint32_t param_id, uint64_t data) {
-    statement_->setUInt64(param_id, data);
+    statement_->setUInt64(param_id+1, data);
   }
   void mysql_statement::bind_param(std::uint32_t param_id, int64_t data) {
-    statement_->setInt64(param_id, data);
+    statement_->setInt64(param_id+1, data);
   }
 
   std::shared_ptr<mysql_result> mysql_statement::execute() {
     if(boost::algorithm::istarts_with(sql_, "select")){
       auto result = statement_->executeQuery();
       return std::make_unique<mysql_result>(0, result);
-    }else{
+    }else {
       auto result = statement_->executeUpdate();
       return std::make_unique<mysql_result>(result, nullptr);
     }

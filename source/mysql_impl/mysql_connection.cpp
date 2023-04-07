@@ -10,8 +10,8 @@ namespace rosetta {
     std::cout << "Connection Closing" << std::endl;
   }
 
-  mysql_statement mysql_connection::prepared_statement(std::string_view sql) {
-    return mysql_statement(*this, sql);
+  std::shared_ptr<mysql_statement> mysql_connection::prepared_statement(std::string_view sql) {
+    return std::make_shared<mysql_statement>(*this, sql);
   }
 
   mysql_connection::mysql_connection(std::string_view host, unsigned short port, std::string_view username, std::string_view password, std::string_view database): database_connection(host, port, username, password, database) {
@@ -43,7 +43,13 @@ namespace rosetta {
   }
 
   void mysql_connection::refresh() {
-    std::cout << "refresh" << std::endl;
+    auto stmt = connection_->prepareStatement("select 1");
+    if(stmt->execute())
+    {
+      last_active_ = std::chrono::steady_clock::now();
+    }else{
+      // TODO: Handle When Failed To Refresh
+    }
   }
 
   void mysql_connection::close() {

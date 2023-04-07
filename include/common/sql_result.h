@@ -7,7 +7,9 @@
 #include <string>
 #include <type_traits>
 #include "sql_types.h"
+
 namespace rosetta {
+  class sql_row;
   template<typename ReturnType>
   concept DatabaseTypes =
       std::same_as<ReturnType, sql_bool> ||
@@ -19,7 +21,7 @@ namespace rosetta {
       std::same_as<ReturnType, sql_int64> ||
       std::same_as<ReturnType, sql_uint64>;
 
-  class sql_result {
+  class sql_result : std::enable_shared_from_this<sql_result>{
   public:
     explicit sql_result(std::size_t affected_rows): affected_rows_(affected_rows){};
 
@@ -30,6 +32,7 @@ namespace rosetta {
     virtual std::string column_name(std::size_t column) = 0;
     virtual std::string column_type(const std::string& column) = 0;
     virtual std::string column_type(std::size_t column) = 0;
+    virtual std::unique_ptr<sql_row> get_row(std::uint32_t row);
 
     template<DatabaseTypes ReturnType>
     ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, sql_uint>::value>::type* = 0){
@@ -90,6 +93,8 @@ namespace rosetta {
     ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, sql_int64>::value>::type* = 0){
       return get_int64(row, column);
     }
+
+    std::string to_json();
   protected:
     virtual sql_bool get_boolean(std::uint32_t row, std::size_t col) = 0;
     virtual sql_long_double get_double(std::uint32_t row, std::size_t col) = 0;

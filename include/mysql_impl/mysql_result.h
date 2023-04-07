@@ -18,6 +18,9 @@ namespace rosetta {
     std::string column_type(const std::string &column) override;
 
     std::string column_type(std::size_t column) override;
+
+    //std::unique_ptr<sql_row> get_row(std::uint32_t row) override;
+
     size_t column_index(const std::string &column) override;
   protected:
     sql_bool get_boolean(std::uint32_t row, std::size_t column) override;

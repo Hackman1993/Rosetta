@@ -7,5 +7,6 @@
 #include "mysql_impl/mysql_connection.h"
 #include "mysql_impl/mysql_statement.h"
 #include "mysql_impl/mysql_result.h"
+#include "common/sql_row.h"
 #include "database_pool.h"
 #endif //OBELISK_ROSETTA_H

@@ -18,7 +18,7 @@ namespace rosetta {
     void begin_transaction() override;
     void commit_transaction() override;
 
-    mysql_statement prepared_statement(std::string_view sql) override;
+    std::shared_ptr<mysql_statement> prepared_statement(std::string_view sql) override;
 
     void close() override;
 

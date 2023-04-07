@@ -57,6 +57,11 @@ namespace rosetta {
       if(data_) return "\"" + boost::lexical_cast<std::string>(*data_) + "\"";
       return "null";
     }
+
+    operator std::string_view(){
+      if(!data_) return "";
+      return *data_;
+    }
   };
 
   class sql_int64 : public sql_value<std::int64_t>{

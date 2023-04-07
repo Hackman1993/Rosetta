@@ -4,7 +4,7 @@
 
 #include "mysql_impl/mysql_result.h"
 #include "exception/database_exception.h"
-
+#include "common/sql_row.h"
 namespace rosetta {
 
   mysql_result::mysql_result(std::size_t affected, sql::ResultSet *result) : sql_result(affected), result_(result){
@@ -62,7 +62,8 @@ namespace rosetta {
   }
 
   size_t mysql_result::column_index(const std::string &column) {
-    return result_->findColumn(column);
+    std::cout << result_->findColumn(column) << std::endl;
+    return (result_->findColumn(column) - 1);
   }
 
   std::string mysql_result::column_name(std::size_t column) {
@@ -71,7 +72,7 @@ namespace rosetta {
   }
 
   std::string mysql_result::column_type(const std::string &column) {
-    return result_? result_->getMetaData()->getColumnTypeName(column_index(column)):"";
+    return result_? result_->getMetaData()->getColumnTypeName(column_index(column)+1):"";
   }
 
   std::string mysql_result::column_type(std::size_t column) {
