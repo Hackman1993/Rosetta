@@ -9,9 +9,16 @@ find_package(Boost REQUIRED thread)
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(include)
+include_directories(D:/Workspace/Cpp/libsahara/include)
 include_directories("C:\\Program Files\\MySQL\\MySQL Connector C++ 8.0\\include")
 link_directories("C:/Program Files/MySQL/MySQL Connector C++ 8.0/debug/vs14")
-
+if (${CMAKE_BUILD_TYPE} MATCHES Debug)
+    link_directories(D:/Workspace/Cpp/Rosetta/cmake-build-debug)
+    link_directories(D:/Workspace/Cpp/libsahara/cmake-build-debug)
+elseif (${CMAKE_BUILD_TYPE} MATCHES Release)
+    link_directories(D:/Workspace/Cpp/Rosetta/cmake-build-release)
+    link_directories(D:/Workspace/Cpp/libsahara/cmake-build-release)
+endif()
 
 add_library(rosetta ${CPP_HEADERS} ${CPP_SOURCES})
 target_link_libraries(rosetta PRIVATE mysqlcppconn8 mysqlcppconn Boost::thread)

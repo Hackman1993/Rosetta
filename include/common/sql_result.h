@@ -12,14 +12,11 @@ namespace rosetta {
   class sql_row;
   template<typename ReturnType>
   concept DatabaseTypes =
-      std::same_as<ReturnType, sql_bool> ||
-      std::same_as<ReturnType, sql_int> ||
-      std::same_as<ReturnType, sql_uint> ||
-      std::same_as<ReturnType, sql_double> ||
-      std::same_as<ReturnType, sql_long_double> ||
-      std::same_as<ReturnType, sql_string> ||
-      std::same_as<ReturnType, sql_int64> ||
-      std::same_as<ReturnType, sql_uint64>;
+      std::same_as<ReturnType, boolean> ||
+      std::same_as<ReturnType, unsigned_integer> ||
+      std::same_as<ReturnType, long_double> ||
+      std::same_as<ReturnType, string> ||
+      std::same_as<ReturnType, integer>;
 
   class sql_result : std::enable_shared_from_this<sql_result>{
   public:
@@ -34,75 +31,60 @@ namespace rosetta {
     virtual std::string column_type(std::size_t column) = 0;
     virtual std::unique_ptr<sql_row> get_row(std::uint32_t row);
 
-    template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, sql_uint>::value>::type* = 0){
-      return get_uint32(row, column_index(column));
-    }
-    template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, sql_uint>::value>::type* = 0){
-      return get_uint32(row, column);
-    }
-    template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, sql_string>::value>::type* = 0){
-      return get_string(row, column_index(column));
-    }
-    template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, sql_string>::value>::type* = 0){
-      return get_string(row, column);
-    }
-    template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, sql_long_double>::value>::type* = 0){
-      return get_double(row, column_index(column));
-    }
 
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, sql_long_double>::value>::type* = 0){
-      return get_double(row, column);
-    }
-    template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, sql_bool>::value>::type* = 0){
-      return get_boolean(row, column_index(column));
-    }
-    template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, sql_bool>::value>::type* = 0){
+    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, boolean>::value>::type* = 0){
       return get_boolean(row, column);
     }
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, sql_int>::value>::type* = 0){
-      return get_int32(row, column_index(column));
+    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, boolean>::value>::type* = 0){
+      return get_boolean(row, column_index(column));
     }
 
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, sql_int>::value>::type* = 0){
-      return get_int32(row, column);
+    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, integer>::value>::type* = 0){
+      return get_integer(row, column);
+    }
+    template<DatabaseTypes ReturnType>
+    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, integer>::value>::type* = 0){
+      return get_integer(row, column_index(column));
     }
 
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, sql_uint64>::value>::type* = 0){
-      return get_uint64(row, column_index(column));
+    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, unsigned_integer>::value>::type* = 0){
+      return get_unsigned_integer(row, column);
+    }
+
+    template<DatabaseTypes ReturnType>
+    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, unsigned_integer>::value>::type* = 0){
+      return get_unsigned_integer(row, column_index(column));
+    }
+
+    template<DatabaseTypes ReturnType>
+    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, string>::value>::type* = 0){
+      return get_string(row, column);
     }
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, sql_uint64>::value>::type* = 0){
-      return get_uint64(row, column);
+    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, string>::value>::type* = 0){
+      return get_string(row, column_index(column));
+    }
+
+    template<DatabaseTypes ReturnType>
+    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, long_double>::value>::type* = 0){
+      return get_double(row, column);
     }
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, sql_int64>::value>::type* = 0){
-      return get_int64(row, column_index(column));
-    }
-    template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, std::size_t column, typename std::enable_if<std::is_same<ReturnType, sql_int64>::value>::type* = 0){
-      return get_int64(row, column);
+    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, long_double>::value>::type* = 0){
+      return get_double(row, column_index(column));
     }
 
     std::string to_json();
   protected:
-    virtual sql_bool get_boolean(std::uint32_t row, std::size_t col) = 0;
-    virtual sql_long_double get_double(std::uint32_t row, std::size_t col) = 0;
-    virtual sql_string get_string(std::uint32_t row, std::size_t col) = 0;
-    virtual sql_int get_int32(std::uint32_t row, std::size_t col) = 0;
-    virtual sql_uint get_uint32(std::uint32_t row, std::size_t col) = 0;
-    virtual sql_uint64 get_uint64(std::uint32_t row, std::size_t col) = 0;
-    virtual sql_int64 get_int64(std::uint32_t row, std::size_t col) = 0;
+    virtual boolean get_boolean(std::uint32_t row, std::size_t col) = 0;
+    virtual long_double get_double(std::uint32_t row, std::size_t col) = 0;
+    virtual string get_string(std::uint32_t row, std::size_t col) = 0;
+    virtual integer get_integer(std::uint32_t row, std::size_t col) = 0;
+    virtual unsigned_integer get_unsigned_integer(std::uint32_t row, std::size_t col) = 0;
 
     std::size_t affected_rows_;
   };

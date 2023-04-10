@@ -1,7 +1,8 @@
 #include <iostream>
 #include "common/sql_result.h"
 #include "common/sql_row.h"
-#include "boost/algorithm/string.hpp"
+#include <string>
+#include <sstream>
 namespace rosetta {
   std::unique_ptr<sql_row> sql_result::get_row(std::uint32_t row) {
     if(row < 0 || row > count()-1) return nullptr;

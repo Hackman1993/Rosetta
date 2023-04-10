@@ -1,7 +1,7 @@
 #include "common/sql_row.h"
 #include <boost/algorithm/string.hpp>
 #include <iostream>
-
+#include <sstream>
 namespace rosetta{
   std::string sql_row::to_json() {
     std::stringstream sstream;
@@ -18,11 +18,11 @@ namespace rosetta{
           boost::iequals(type,"char")||
           boost::iequals(type, "timestamp")||
           boost::iequals(type, "datetime")
-          ) sstream << get<rosetta::sql_string>(i).json_value();
+          ) sstream << get<rosetta::string>(i).json();
       else if(
           boost::iequals(type,"tinyint") ||
           boost::iequals(type,"int")
-          ) sstream << get<rosetta::sql_string>(i).json_value();
+          ) sstream << get<rosetta::string>(i).json();
       else{
         std::cout << "Unhandled Sql Type:" << type << std::endl;
         sstream << "null";

@@ -19,7 +19,7 @@ namespace rosetta {
       driver_ = sql::mysql::get_mysql_driver_instance();
 
     if(driver_ == nullptr)
-      throw database_exception(5100, "No Driver Instance Found!");
+      throw sahara::exception::database_exception(5100, "No Driver Instance Found!");
     std::stringstream sstream;
     sstream << "tcp://" << host_ << ":" << port_;
     try{
@@ -30,7 +30,7 @@ namespace rosetta {
       delete stmt;
     }catch (std::exception& e)
     {
-      throw database_exception(5101, "Connection:" + std::string(e.what()));
+      throw sahara::exception::database_exception(5101, "Connection:" + std::string(e.what()));
     }
   }
 
