@@ -10,7 +10,7 @@
 namespace rosetta {
 
   class mysql_statement;
-  class mysql_connection : public database_connection<mysql_statement>{
+  class mysql_connection : public database_connection{
   public:
     mysql_connection(std::string_view host, unsigned short port, std::string_view username, std::string_view password, std::string_view database);
     void refresh() override;
@@ -18,7 +18,7 @@ namespace rosetta {
     void begin_transaction() override;
     void commit_transaction() override;
 
-    std::shared_ptr<mysql_statement> prepared_statement(std::string_view sql) override;
+    std::shared_ptr<sql_statement_base> prepared_statement(std::string_view sql) override;
 
     void close() override;
 

@@ -4,15 +4,21 @@
 
 #ifndef ROSETTA_SQL_TYPES_H
 #define ROSETTA_SQL_TYPES_H
-#include "nullable_types.h"
+
+#include "types/nullable.h"
 #include "time/timestamp.h"
+#include <string/string.h>
+
 namespace rosetta {
-  using long_double = sahara::nullable_type<long double>;
-  using boolean = sahara::nullable_type<bool>;
-  using integer = sahara::nullable_type<std::int64_t>;
-  using string = sahara::nullable_type<std::string>;
-  using unsigned_integer = sahara::nullable_type<std::uint64_t>;
-  using timestamp = sahara::nullable_type<sahara::time::timestamp>;
+  using long_double = sahara::types::nullable<long double>;
+  using boolean = sahara::types::nullable<bool>;
+  using integer = sahara::types::nullable<std::int64_t>;
+  using string = sahara::types::nullable<std::string>;
+
+  using unsigned_integer = sahara::types::nullable<std::uint64_t>;
+  using timestamp = sahara::types::nullable<sahara::time::timestamp>;
+
+  using sql_varint_value = std::variant<long_double, boolean, integer, string, unsigned_integer, timestamp>;
 }
 
 #endif //ROSETTA_SQL_TYPES_H

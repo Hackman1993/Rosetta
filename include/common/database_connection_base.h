@@ -18,7 +18,6 @@ namespace rosetta {
   public:
     database_connection_base(std::string_view host, unsigned short port, std::string_view username, std::string_view password, std::string_view database):
       host_(host), port_(port), database_(database), password_(password), username_(username), last_active_(std::chrono::steady_clock::now()){
-
       refresh_thread_ = std::make_unique<std::thread>(std::bind(&database_connection_base::refresh_worker, this));
     };
     virtual void refresh()  = 0;
@@ -29,6 +28,9 @@ namespace rosetta {
       this->close();
       std::cout << "Connection Base Released" << std::endl;
     };
+    virtual void begin_transaction() = 0;
+    virtual void commit_transaction() = 0;
+    virtual std::shared_ptr<sql_statement_base> prepared_statement(std::string_view sql) = 0;
   protected:
     virtual void refresh_worker(){
       while(!shutdown_){

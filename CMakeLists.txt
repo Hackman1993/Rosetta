@@ -21,7 +21,7 @@ elseif (${CMAKE_BUILD_TYPE} MATCHES Release)
 endif()
 
 add_library(rosetta ${CPP_HEADERS} ${CPP_SOURCES})
-target_link_libraries(rosetta PRIVATE mysqlcppconn8 mysqlcppconn Boost::thread)
+target_link_libraries(rosetta PRIVATE mysqlcppconn8 mysqlcppconn Boost::thread libsahara)
 
 file(GLOB_RECURSE TEST_HEADERS test/*.h test/*.hpp)
 file(GLOB_RECURSE TEST_SOURCES test/*.cpp test/*.cc)

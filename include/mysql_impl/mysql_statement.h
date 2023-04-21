@@ -20,16 +20,22 @@ namespace rosetta {
       }
     }
   };
-  class mysql_statement : public sql_statement<mysql_connection, mysql_result, std::uint32_t>{
+  class mysql_statement : public sql_statement{
   public:
     mysql_statement(mysql_connection& connection, std::string_view sql);
+    std::shared_ptr<sql_result> execute() override;
 
-    void bind_param(std::uint32_t type, std::string_view data) override;
+    void bind_param(std::uint32_t param_id, rosetta::string data) override;
 
-    void bind_param(std::uint32_t type, std::uint64_t data) override;
-    void bind_param(std::uint32_t type, std::int64_t data);
+    void bind_param(std::uint32_t param_id, rosetta::integer data) override;
 
-    std::shared_ptr<mysql_result> execute() override;
+    void bind_param(std::uint32_t param_id, rosetta::boolean data) override;
+
+    void bind_param(std::uint32_t param_id, rosetta::timestamp data) override;
+
+    void bind_param(std::uint32_t param_id, rosetta::long_double data) override;
+
+    void bind_param(std::uint32_t param_id, rosetta::unsigned_integer data) override;
 
     ~mysql_statement();
   private:

@@ -9,17 +9,14 @@
 #include <chrono>
 #include "sql_statement_base.h"
 namespace rosetta {
-
-  template <typename ConnectionType, typename ResultType, typename ParamIndexType>
+  class database_connection_base;
   class sql_statement : public sql_statement_base{
   public:
-    sql_statement(ConnectionType& connection, std::string_view sql): sql_statement_base(sql), connection_(connection){}
-    virtual std::shared_ptr<ResultType> execute() = 0;
+    sql_statement(database_connection_base& connection, std::string_view sql): sql_statement_base(sql), connection_(connection){}
 
-    virtual void bind_param(ParamIndexType type, std::string_view data) = 0;
-    virtual void bind_param(ParamIndexType type, uint64_t data) = 0;
+
   protected:
-    ConnectionType& connection_;
+    database_connection_base& connection_;
   };
 
 } // rosetta

@@ -10,7 +10,7 @@ namespace rosetta {
     std::cout << "Connection Closing" << std::endl;
   }
 
-  std::shared_ptr<mysql_statement> mysql_connection::prepared_statement(std::string_view sql) {
+  std::shared_ptr<sql_statement_base> mysql_connection::prepared_statement(std::string_view sql) {
     return std::make_shared<mysql_statement>(*this, sql);
   }
 

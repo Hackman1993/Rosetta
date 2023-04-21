@@ -15,7 +15,7 @@
 
 namespace rosetta {
   mysql_statement::mysql_statement(mysql_connection &connection, std::string_view sql):
-    sql_statement<mysql_connection, mysql_result, std::uint32_t>(connection, sql), statement_(connection.connection_->prepareStatement(std::string(sql))) {
+    sql_statement(connection, sql), statement_(connection.connection_->prepareStatement(std::string(sql))) {
 //    if(connection_.mysql_ == nullptr)
 //      throw exceptions::database_exception(100003, "Session Not Connected!");
 //    stmt_ = mysql_stmt_init(connection_.mysql_);
@@ -29,18 +29,7 @@ namespace rosetta {
 
   }
 
-  void mysql_statement::bind_param(std::uint32_t param_id, std::string_view data) {
-    statement_->setString(param_id+1, std::string(data));
-  }
-
-  void mysql_statement::bind_param(std::uint32_t param_id, uint64_t data) {
-    statement_->setUInt64(param_id+1, data);
-  }
-  void mysql_statement::bind_param(std::uint32_t param_id, int64_t data) {
-    statement_->setInt64(param_id+1, data);
-  }
-
-  std::shared_ptr<mysql_result> mysql_statement::execute() {
+  std::shared_ptr<sql_result> mysql_statement::execute() {
     if(boost::algorithm::istarts_with(sql_, "select")){
       auto result = statement_->executeQuery();
       return std::make_unique<mysql_result>(0, result);
@@ -51,5 +40,33 @@ namespace rosetta {
 
   }
 
+  void mysql_statement::bind_param(std::uint32_t param_id, rosetta::string data) {
+    if(data.is_null())  return statement_->setNull(param_id+1, 0);
+    statement_->setString(param_id+1, std::get<std::string>(data));
+  }
 
+  void mysql_statement::bind_param(std::uint32_t param_id, rosetta::integer data) {
+    if(data.is_null())  return statement_->setNull(param_id+1, 0);
+    statement_->setInt64(param_id+1, std::get<int64_t>(data));
+  }
+
+  void mysql_statement::bind_param(std::uint32_t param_id, rosetta::boolean data) {
+    if(data.is_null())  return statement_->setNull(param_id+1, 0);
+    statement_->setBoolean(param_id+1, std::get<bool>(data));
+  }
+
+  void mysql_statement::bind_param(std::uint32_t param_id, rosetta::timestamp data) {
+    if(data.is_null())  return statement_->setNull(param_id+1, 0);
+    statement_->setDateTime(param_id+1, std::get<sahara::time::timestamp>(data).to_string());
+  }
+
+  void mysql_statement::bind_param(std::uint32_t param_id, rosetta::long_double data) {
+    if(data.is_null())  return statement_->setNull(param_id+1, 0);
+    statement_->setDouble(param_id+1, (double)std::get<long double>(data));
+  }
+
+  void mysql_statement::bind_param(std::uint32_t param_id, rosetta::unsigned_integer data) {
+    if(data.is_null())  return statement_->setNull(param_id+1, 0);
+    statement_->setUInt64(param_id+1, std::get<std::uint64_t>(data));
+  }
 } // rosetta
