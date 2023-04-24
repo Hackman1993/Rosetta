@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 namespace rosetta{
-  std::string sql_row::to_json() {
+    sahara::string sql_row::to_json() {
     std::stringstream sstream;
     sstream << "{";
     bool first_column = true;
@@ -11,20 +11,20 @@ namespace rosetta{
       if(first_column) first_column = false;
       else sstream << ",";
 
-      sstream << "\"" << column_name(i) << "\":";
-      std::string type = column_type(i);
+      sstream << "\"" << column_name(i).to_std() << "\":";
+        sahara::string type = column_type(i);
       if(
-          boost::iequals(type,"varchar")||
-          boost::iequals(type,"char")||
-          boost::iequals(type, "timestamp")||
-          boost::iequals(type, "datetime")
-          ) sstream << get<rosetta::string>(i).json();
+          type.iequals("varchar")||
+          type.iequals("char")||
+          type.iequals( "timestamp")||
+          type.iequals( "datetime")
+          ) sstream << get<rosetta::string>(i).json().to_std();
       else if(
-          boost::iequals(type,"tinyint") ||
-          boost::iequals(type,"int")
-          ) sstream << get<rosetta::string>(i).json();
+          type.iequals("tinyint") ||
+          type.iequals("int")
+          ) sstream << get<rosetta::string>(i).json().to_std();
       else{
-        std::cout << "Unhandled Sql Type:" << type << std::endl;
+        std::cout << "Unhandled Sql Type:" << type.to_std() << std::endl;
         sstream << "null";
       }
     }

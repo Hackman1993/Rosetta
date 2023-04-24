@@ -5,14 +5,15 @@
 #ifndef ROSETTA_MYSQL_CONNECTION_H
 #define ROSETTA_MYSQL_CONNECTION_H
 #include "../common/database_connection.h"
-#include <mysql/jdbc.h>
+#include <mysql_connection.h>
+#include <mysql_driver.h>
 #include <utility>
 namespace rosetta {
 
   class mysql_statement;
   class mysql_connection : public database_connection{
   public:
-    mysql_connection(std::string_view host, unsigned short port, std::string_view username, std::string_view password, std::string_view database);
+    mysql_connection(const sahara::string& host, unsigned short port, const sahara::string& username, const sahara::string& password, const sahara::string& database);
     void refresh() override;
 
     void begin_transaction() override;

@@ -12,7 +12,7 @@ namespace rosetta {
         public:
             bool table_exists(std::string_view name) override;
 
-            sahara::types::nullable<table> table_info(std::string_view name) override;
+            //sahara::types::nullable<table> table_info(std::string_view name) override;
 
             bool create_table(std::string_view name, std::string_view comment, std::string_view encoding) override;
 

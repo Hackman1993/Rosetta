@@ -30,7 +30,7 @@ namespace rosetta {
   }
 
   std::shared_ptr<sql_result> mysql_statement::execute() {
-    if(boost::algorithm::istarts_with(sql_, "select")){
+    if(sql_.istart_with("select")){
       auto result = statement_->executeQuery();
       return std::make_unique<mysql_result>(0, result);
     }else {
@@ -42,7 +42,10 @@ namespace rosetta {
 
   void mysql_statement::bind_param(std::uint32_t param_id, rosetta::string data) {
     if(data.is_null())  return statement_->setNull(param_id+1, 0);
-    statement_->setString(param_id+1, std::get<std::string>(data));
+    auto str = std::get<sahara::string>(data);
+
+    // TODO:: Fix
+    //statement_->setString(param_id+1, str);
   }
 
   void mysql_statement::bind_param(std::uint32_t param_id, rosetta::integer data) {

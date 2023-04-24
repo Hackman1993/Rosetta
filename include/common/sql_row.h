@@ -14,7 +14,7 @@ namespace rosetta {
 
 
     template <typename ResultType>
-    ResultType get(std::string col_name){
+    ResultType get(sahara::string col_name){
       return result_.template get<ResultType>(row_ ,col_name);
     }
 
@@ -27,15 +27,15 @@ namespace rosetta {
       return result_.column_count();
     }
 
-    std::string column_name(std::uint32_t column) {
+      sahara::string column_name(std::uint32_t column) {
       return result_.column_name(column);
     }
 
-    std::string column_type(std::uint32_t column) {
+      sahara::string column_type(std::uint32_t column) {
       return result_.column_type(column);
     }
 
-    std::string to_json();
+      sahara::string to_json();
 
 
   protected:

@@ -14,7 +14,7 @@ namespace rosetta {
   public:
     explicit sql_statement_base(std::string_view statement): sql_(statement){}
 
-    virtual std::string_view to_string(){ return sql_; };
+    virtual sahara::string& to_string(){ return sql_; };
     virtual std::shared_ptr<sql_result> execute() = 0;
 
     virtual void bind_param(std::uint32_t param_id, rosetta::string data) = 0;
@@ -24,7 +24,7 @@ namespace rosetta {
     virtual void bind_param(std::uint32_t param_id, rosetta::long_double data) = 0;
     virtual void bind_param(std::uint32_t param_id, rosetta::unsigned_integer data) = 0;
   protected:
-    std::string sql_;
+      sahara::string sql_;
   };
 
 } // rosetta

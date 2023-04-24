@@ -10,7 +10,7 @@
 #include <boost/thread.hpp>
 #include <condition_variable>
 #include <boost/polymorphic_pointer_cast.hpp>
-#include <common/database_connection_base.h>
+#include "common/database_connection_base.h"
 namespace rosetta {
   using namespace std::chrono_literals;
   class database_pool {
@@ -75,11 +75,11 @@ namespace rosetta {
     std::condition_variable connections_cv_;
     std::unique_ptr<boost::thread> connection_generation_thread_;
 
-    std::string host_;
+      sahara::string host_;
     std::uint16_t port_;
-    std::string username_;
-    std::string password_;
-    std::string database_;
+      sahara::string username_;
+      sahara::string password_;
+      sahara::string database_;
     std::vector<std::shared_ptr<database_connection_base>> connections_;
   };
 }

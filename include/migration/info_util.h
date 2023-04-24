@@ -17,7 +17,7 @@ namespace rosetta {
         class info_util {
         public:
             virtual bool table_exists(std::string_view name) = 0;
-            virtual sahara::types::nullable<table> table_info(std::string_view name) = 0;
+            //virtual sahara::types::nullable<table> table_info(std::string_view name) = 0;
             virtual bool create_table(std::string_view name, std::string_view comment, std::string_view encoding) = 0;
 
             virtual bool field_exists(std::string_view name) = 0;

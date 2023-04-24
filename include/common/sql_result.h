@@ -25,10 +25,10 @@ namespace rosetta {
     [[nodiscard]] std::size_t affected_rows() const { return affected_rows_; };
     virtual std::size_t count() = 0;
     virtual std::size_t column_count() = 0;
-    virtual std::size_t column_index(const std::string& column) = 0;
-    virtual std::string column_name(std::size_t column) = 0;
-    virtual std::string column_type(const std::string& column) = 0;
-    virtual std::string column_type(std::size_t column) = 0;
+    virtual std::size_t column_index(const sahara::string& column) = 0;
+    virtual sahara::string column_name(std::size_t column) = 0;
+    virtual sahara::string column_type(const sahara::string& column) = 0;
+    virtual sahara::string column_type(std::size_t column) = 0;
     virtual std::unique_ptr<sql_row> get_row(std::uint32_t row);
 
 
@@ -37,7 +37,7 @@ namespace rosetta {
       return get_boolean(row, column);
     }
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, boolean>::value>::type* = 0){
+    ReturnType get(std::uint32_t row, const sahara::string& column, typename std::enable_if<std::is_same<ReturnType, boolean>::value>::type* = 0){
       return get_boolean(row, column_index(column));
     }
 
@@ -46,7 +46,7 @@ namespace rosetta {
       return get_integer(row, column);
     }
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, integer>::value>::type* = 0){
+    ReturnType get(std::uint32_t row, const sahara::string& column, typename std::enable_if<std::is_same<ReturnType, integer>::value>::type* = 0){
       return get_integer(row, column_index(column));
     }
 
@@ -56,7 +56,7 @@ namespace rosetta {
     }
 
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, unsigned_integer>::value>::type* = 0){
+    ReturnType get(std::uint32_t row, const sahara::string& column, typename std::enable_if<std::is_same<ReturnType, unsigned_integer>::value>::type* = 0){
       return get_unsigned_integer(row, column_index(column));
     }
 
@@ -65,7 +65,7 @@ namespace rosetta {
       return get_string(row, column);
     }
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, string>::value>::type* = 0){
+    ReturnType get(std::uint32_t row, const sahara::string& column, typename std::enable_if<std::is_same<ReturnType, string>::value>::type* = 0){
       return get_string(row, column_index(column));
     }
 
@@ -74,11 +74,11 @@ namespace rosetta {
       return get_double(row, column);
     }
     template<DatabaseTypes ReturnType>
-    ReturnType get(std::uint32_t row, const std::string& column, typename std::enable_if<std::is_same<ReturnType, long_double>::value>::type* = 0){
+    ReturnType get(std::uint32_t row, const sahara::string& column, typename std::enable_if<std::is_same<ReturnType, long_double>::value>::type* = 0){
       return get_double(row, column_index(column));
     }
 
-    std::string to_json();
+      sahara::string to_json();
   protected:
     virtual boolean get_boolean(std::uint32_t row, std::size_t col) = 0;
     virtual long_double get_double(std::uint32_t row, std::size_t col) = 0;

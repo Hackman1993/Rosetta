@@ -9,14 +9,14 @@ namespace rosetta {
     return std::make_unique<sql_row>(*this, row);
   }
 
-  std::string sql_result::to_json() {
+    sahara::string sql_result::to_json() {
     std::stringstream sstream;
     sstream << "[";
     bool first_row = true;
     for(int i =0; i< count(); i++){
       if(first_row) first_row = false;
       else sstream << ",";
-      sstream << get_row(i)->to_json();
+      sstream << get_row(i)->to_json().to_std();
     }
     sstream << "]";
     return sstream.str();

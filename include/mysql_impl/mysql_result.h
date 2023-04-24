@@ -6,7 +6,7 @@
 #define ROSETTA_MYSQL_RESULT_H
 #include "common/sql_result.h"
 #include <string>
-#include <mysql/jdbc.h>
+#include <cppconn/resultset.h>
 namespace rosetta {
 
   struct result_deleter{
@@ -22,11 +22,11 @@ namespace rosetta {
   public:
     mysql_result(std::size_t affected, sql::ResultSet* result);
     size_t count() override;
-    std::string column_name(std::size_t column) override;
-    std::string column_type(std::size_t column) override;
-    std::string column_type(const std::string &column) override;
+      sahara::string column_name(std::size_t column) override;
+      sahara::string column_type(std::size_t column) override;
+      sahara::string column_type(const sahara::string &column) override;
 
-    size_t column_index(const std::string &column) override;
+    size_t column_index(const sahara::string &column) override;
   protected:
     string get_string(std::uint32_t row, std::size_t column) override;
     integer get_integer(std::uint32_t row, std::size_t column) override;

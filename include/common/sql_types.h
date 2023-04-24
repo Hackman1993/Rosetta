@@ -13,7 +13,7 @@ namespace rosetta {
   using long_double = sahara::types::nullable<long double>;
   using boolean = sahara::types::nullable<bool>;
   using integer = sahara::types::nullable<std::int64_t>;
-  using string = sahara::types::nullable<std::string>;
+  using string = sahara::types::nullable<sahara::string>;
 
   using unsigned_integer = sahara::types::nullable<std::uint64_t>;
   using timestamp = sahara::types::nullable<sahara::time::timestamp>;

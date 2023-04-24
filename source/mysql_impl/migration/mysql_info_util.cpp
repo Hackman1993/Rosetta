@@ -10,9 +10,9 @@ namespace rosetta {
             return false;
         }
 
-        sahara::types::nullable<table> mysql_info_util::table_info(std::string_view name) {
-            return sahara::types::nullable<table>();
-        }
+//        sahara::types::nullable<table> mysql_info_util::table_info(std::string_view name) {
+//            return sahara::types::nullable<table>();
+//        }
 
         bool mysql_info_util::create_table(std::string_view name, std::string_view comment, std::string_view encoding) {
             return false;
