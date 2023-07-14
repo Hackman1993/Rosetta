@@ -13,7 +13,7 @@ namespace rosetta::migration {
 
     class table {
     public:
-        table(std::string_view name ,std::string_view comment, std::string_view encoding): name_(name), encoding_(encoding), comment_(comment){};
+        table(const sahara::string& name ,const sahara::string& comment, const sahara::string& encoding): name_(name), encoding_(encoding), comment_(comment){};
         virtual sahara::string sql() = 0;
     protected:
         sahara::string name_;

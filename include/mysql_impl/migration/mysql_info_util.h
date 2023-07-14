@@ -10,17 +10,17 @@ namespace rosetta {
 
         class mysql_info_util : public info_util{
         public:
-            bool table_exists(std::string_view name) override;
+            bool table_exists(const sahara::string& name) override;
 
             //sahara::types::nullable<table> table_info(std::string_view name) override;
 
-            bool create_table(std::string_view name, std::string_view comment, std::string_view encoding) override;
+            bool create_table(const sahara::string& name, const sahara::string& comment, const sahara::string& encoding) override;
 
-            bool field_exists(std::string_view name) override;
+            bool field_exists(const sahara::string& name) override;
 
             sahara::string get_field_sql(field_info &field) const override;
 
-            field_info get_field_info(std::string_view name) override;
+            field_info get_field_info(const sahara::string& name) override;
         };
 
     } // rosetta

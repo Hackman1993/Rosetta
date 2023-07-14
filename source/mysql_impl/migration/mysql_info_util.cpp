@@ -6,7 +6,7 @@
 
 namespace rosetta {
     namespace migration {
-        bool mysql_info_util::table_exists(std::string_view name) {
+        bool mysql_info_util::table_exists(const sahara::string& name) {
             return false;
         }
 
@@ -14,11 +14,11 @@ namespace rosetta {
 //            return sahara::types::nullable<table>();
 //        }
 
-        bool mysql_info_util::create_table(std::string_view name, std::string_view comment, std::string_view encoding) {
+        bool mysql_info_util::create_table(const sahara::string& name, const sahara::string& comment, const sahara::string& encoding) {
             return false;
         }
 
-        bool mysql_info_util::field_exists(std::string_view name) {
+        bool mysql_info_util::field_exists(const sahara::string& name) {
             return false;
         }
 
@@ -26,7 +26,7 @@ namespace rosetta {
             return sahara::string();
         }
 
-        field_info mysql_info_util::get_field_info(std::string_view name) {
+        field_info mysql_info_util::get_field_info(const sahara::string& name) {
             return field_info();
         }
     } // rosetta
