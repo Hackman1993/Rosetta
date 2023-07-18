@@ -9,14 +9,14 @@
 #include <unordered_map>
 #include "sql_statement_base.h"
 namespace rosetta {
-  class database_connection_base;
+  class database_connection;
   class sql_statement : public sql_statement_base{
   public:
-    sql_statement(database_connection_base& connection, const sahara::string& sql): sql_statement_base(sql), connection_(connection){}
+    sql_statement(database_connection& connection, const std::string& sql): sql_statement_base(sql), connection_(connection){}
 
 
   protected:
-    database_connection_base& connection_;
+      database_connection& connection_;
   };
 
 } // rosetta

@@ -6,6 +6,7 @@
 #define ROSETTA_MYSQL_RESULT_H
 #include "common/sql_result.h"
 #include <string>
+#include <mysql/mysql.h>
 namespace rosetta {
 
   class mysql_result : public sql_result{
@@ -17,14 +18,9 @@ namespace rosetta {
 
     size_t column_index(const sahara::string &column) override;
   protected:
-    string get_string(std::uint32_t row, std::size_t column) override;
-    integer get_integer(std::uint32_t row, std::size_t column) override;
-    boolean get_boolean(std::uint32_t row, std::size_t column) override;
-    long_double get_double(std::uint32_t row, std::size_t column) override;
-    unsigned_integer get_unsigned_integer(std::uint32_t row, std::size_t column) override;
-  protected:
     size_t column_count() override;
     void _move_cursor(std::size_t cursor);
+    MYSQL_RES* result_;
   };
 
 } // rosetta

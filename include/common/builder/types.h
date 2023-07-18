@@ -23,13 +23,7 @@ namespace rosetta {
         CT_NOT_IN,
     };
 
-    enum ACTION_TYPE{
-        AT_UNSET,
-        AT_INSERT,
-        AT_UPDATE,
-        AT_DELETE,
-        AT_SELECT,
-    };
+
 
 } // rosetta
 
