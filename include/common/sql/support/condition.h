@@ -6,7 +6,7 @@
 #define ROSETTA_CONDITION_H
 #include <utility>
 
-#include "common/sql/support/operate_base.h"
+#include "operate_base.h"
 namespace rosetta::core {
 
     class condition : public operate_base{
