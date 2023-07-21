@@ -21,8 +21,10 @@ namespace rosetta::core {
         std::string compile() override;
         select& where(const std::string& column, const std::string& operate, const std::string& value);
 
-        select& inner_join(alia table, const std::function<void (joins&)>& callback);
+        select& inner_join(const alia& table, const std::function<void (joins&)>& callback);
         select& inner_join(std::string table, const std::function<void (joins&)>& callback);
+        select& left_join(const alia& table, const std::function<void (joins&)>& callback);
+        select& left_join(std::string table, const std::function<void (joins&)>& callback);
     protected:
         std::vector<joins> joins_;
     };

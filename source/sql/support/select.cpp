@@ -75,18 +75,28 @@ namespace rosetta {
             return *this;
         }
 
-        select &select::inner_join(alia table, const std::function<void(joins &)> &callback) {
+        select &select::inner_join(const alia& table, const std::function<void(joins &)> &callback) {
             joins_.emplace_back(table, JOIN_TYPE_INNER, callback);
             return *this;
         }
 
         select &select::inner_join(std::string table, const std::function<void(joins &)> &callback) {
-            joins_.emplace_back(alia{table, ""}, JOIN_TYPE_INNER, callback);
+            joins_.emplace_back(alia{std::move(table), ""}, JOIN_TYPE_INNER, callback);
             return *this;
         }
 
         select &select::distinct(bool distinct){
             distinct_ = distinct;
+            return *this;
+        }
+
+        select &select::left_join(const alia& table, const std::function<void(joins &)> &callback) {
+            joins_.emplace_back(table, JOIN_TYPE_INNER, callback);
+            return *this;
+        }
+
+        select &select::left_join(std::string table, const std::function<void(joins &)> &callback) {
+            joins_.emplace_back(alia{std::move(table), ""}, JOIN_TYPE_INNER, callback);
             return *this;
         }
 
