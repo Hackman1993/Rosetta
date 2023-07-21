@@ -26,6 +26,9 @@ namespace rosetta {
             case MYSQL_TYPE_BLOB:
                 value = std::string((const char*)data_[column].get(), length_[column]);
                 break;
+            case MYSQL_TYPE_STRING:
+                value = std::string((const char*)data_[column].get(), *bind_[column].length);
+                break;
             case MYSQL_TYPE_TIMESTAMP:
                 MYSQL_TIME *time= (MYSQL_TIME *)data_[column].get();
                 sahara::string str = sahara::string::static_format("{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}.{}", time->year, time->month, time->day, time->hour, time->minute, time->second, time->second_part);

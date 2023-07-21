@@ -38,6 +38,12 @@ int main() {
         statement->bind_param(std::string("admin"));
         statement->execute();
         auto result = statement->get();
+        auto row = result->next();
+        auto vari = row->get_column(0);
+        std::string uid = std::get<std::string>(row->get_column(0));
+        std::string uname = std::get<std::string>(row->get_column(1));
+        std::string pwd = std::get<std::string>(row->get_column(2));
+
         auto bca = result->count();
         auto row1 = result->next();
         auto val1 = row1->get_column(1);
