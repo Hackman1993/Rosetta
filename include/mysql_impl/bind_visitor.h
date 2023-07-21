@@ -43,10 +43,11 @@ namespace rosetta {
 
         MYSQL_BIND operator()(std::string value) {
             MYSQL_BIND bind = {nullptr};
-            bind.buffer_type = MYSQL_TYPE_VARCHAR;
+            bind.buffer_type = MYSQL_TYPE_STRING;
             core::sql_param_value &val = values_.emplace_back(value);
             bind.buffer_length = value.length();
-            bind.buffer = (void *) &std::get<std::string>(val);
+            auto& v = std::get<std::string>(val);
+            bind.buffer = (void *) v.data();
             return bind;
         }
 

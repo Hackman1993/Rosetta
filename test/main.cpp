@@ -15,13 +15,10 @@ using namespace std::chrono_literals;
 int main() {
 
     try {
-        rosetta::core::select select_builder({"code", "permission_id"});
-        select_builder.distinct().from({{"t_permission", "a"}}).inner_join(rosetta::core::alia{"t_mid_role_permission", "b"}, [&](rosetta::core::joins &join) {
-            join.on("a.permission_id", "=", "b.mid_permission_id");
-        }).inner_join(rosetta::core::alia{"t_mid_user_role", "c"}, [&](auto &join) {
-            join.on("b.mid_role_id", "=", "c.mid_role_id");
-        }).where("c.mid_user_id", "=", "?");
+        rosetta::core::select select_builder({"user_id", "username", "password"});
+        select_builder.from({{"t_user", ""}}).where("username", "=", "?");
 
+        auto test = select_builder.compile();
 
         int a = 100;
         MYSQL *data = mysql_init(nullptr);
@@ -37,9 +34,11 @@ int main() {
             }
         }
         auto connection = pool.get_connection<rosetta::mysql_connection>();
-        auto statement = connection->prepared_statement("select date_,longtext_ from t_test");
+        auto statement = connection->prepared_statement(test);
+        statement->bind_param(std::string("admin"));
         statement->execute();
         auto result = statement->get();
+        auto bca = result->count();
         auto row1 = result->next();
         auto val1 = row1->get_column(1);
         auto row2 = result->next();

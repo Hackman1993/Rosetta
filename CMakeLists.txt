@@ -43,3 +43,10 @@ install(TARGETS ${PROJECT_NAME}
 
 install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME} FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
 install(EXPORT ${PROJECT_NAME}-targets NAMESPACE ${PROJECT_NAME}:: DESTINATION share/${PROJECT_NAME})
+
+file(GLOB_RECURSE TEST_SOURCES test/*.h test/*.hpp test/*.cpp test/*.cc)
+add_executable(${PROJECT_NAME}_test ${TEST_SOURCES} )
+find_package(sahara REQUIRED)
+find_package(boost REQUIRED json)
+target_include_directories(${PROJECT_NAME}_test PRIVATE include)
+target_link_libraries(${PROJECT_NAME}_test PRIVATE ws2_32 Boost::locale sahara::sahara rosetta fmt::fmt)
