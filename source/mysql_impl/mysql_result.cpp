@@ -70,3 +70,156 @@
 //        return result_ ? result_->getMetaData()->getColumnTypeName(column + 1).asStdString() : "";
 //    }
 //} // rosetta
+
+#include <utility>
+#include <iostream>
+
+#include "mysql_impl/mysql_result.h"
+#include "mysql_impl/mysql_row.h"
+
+rosetta::mysql_result::mysql_result(std::shared_ptr<MYSQL_STMT> statement) : statement_(std::move(statement)){
+    column_meta_ = mysql_stmt_result_metadata(statement_.get());
+}
+
+size_t rosetta::mysql_result::count() {
+    if(row_count_ == nullptr)
+    {
+        if(mysql_stmt_store_result(statement_.get()))
+            throw std::logic_error(mysql_stmt_error(statement_.get()));
+        row_count_ = std::make_shared<std::uint64_t>(mysql_stmt_num_rows(statement_.get()));
+    }
+
+    return *row_count_;
+}
+
+sahara::string rosetta::mysql_result::column_name(std::size_t column) {
+    if(column >= column_meta_->field_count)
+        throw std::logic_error("Column Index Out Of Range!");
+    return column_meta_->fields[column].name;
+}
+
+sahara::string rosetta::mysql_result::column_type(std::size_t column) {
+    if(column >= column_meta_->field_count)
+        throw std::logic_error("Column Index Out Of Range!");
+    switch (column_meta_->fields[column].type){
+        case MYSQL_TYPE_DECIMAL:
+            return "decimal";
+        case MYSQL_TYPE_TINY:
+            return "tiny";
+        case MYSQL_TYPE_SHORT:
+            return "short";
+        case MYSQL_TYPE_LONG:
+            return "long";
+        case MYSQL_TYPE_FLOAT:
+            return "float";
+        case MYSQL_TYPE_DOUBLE:
+            return "double";
+        case MYSQL_TYPE_NULL:
+            return "null";
+        case MYSQL_TYPE_TIMESTAMP:
+            return "timestamp";
+        case MYSQL_TYPE_LONGLONG:
+            return "long long";
+        case MYSQL_TYPE_INT24:
+            return "int24";
+        case MYSQL_TYPE_DATE:
+            return "date";
+        case MYSQL_TYPE_TIME:
+            return "time";
+        case MYSQL_TYPE_DATETIME:
+            return "datetime";
+        case MYSQL_TYPE_YEAR:
+            return "year";
+        case MYSQL_TYPE_NEWDATE:
+            return "new date";
+        case MYSQL_TYPE_VARCHAR:
+            return "varchar";
+        case MYSQL_TYPE_BIT:
+            return "bit";
+        case MYSQL_TYPE_TIMESTAMP2:
+            return "timestamp2";
+        case MYSQL_TYPE_DATETIME2:
+            return "datetime2";
+        case MYSQL_TYPE_TIME2:
+            return "time2";
+        case MYSQL_TYPE_TYPED_ARRAY:
+            return "typed array";
+        case MYSQL_TYPE_INVALID:
+            return "invalid";
+        case MYSQL_TYPE_BOOL:
+            return "bool";
+        case MYSQL_TYPE_JSON:
+            return "json";
+        case MYSQL_TYPE_NEWDECIMAL:
+            return "new decimal";
+        case MYSQL_TYPE_ENUM:
+            return "enum";
+        case MYSQL_TYPE_SET:
+            return "set";
+        case MYSQL_TYPE_TINY_BLOB:
+            return "tiny blob";
+        case MYSQL_TYPE_MEDIUM_BLOB:
+            return "medium blob";
+        case MYSQL_TYPE_LONG_BLOB:
+            return "long blob";
+        case MYSQL_TYPE_BLOB:
+            return "blob";
+        case MYSQL_TYPE_VAR_STRING:
+            return "var string";
+        case MYSQL_TYPE_STRING:
+            return "string";
+        case MYSQL_TYPE_GEOMETRY:
+            return "geometry";
+    }
+    return "unknown";
+}
+
+sahara::string rosetta::mysql_result::column_type(const sahara::string &column) {
+    return column_type(column_index(column));
+}
+
+size_t rosetta::mysql_result::column_index(const sahara::string &column) {
+    if(!columns_.contains(column.to_std()))
+        throw std::logic_error("Column Not Exists!");
+    return columns_[column.to_std()];
+}
+
+size_t rosetta::mysql_result::column_count() {
+    return mysql_stmt_field_count(statement_.get());
+}
+
+size_t rosetta::mysql_result::affected_rows() {
+    return mysql_stmt_affected_rows(statement_.get());
+}
+
+std::shared_ptr<rosetta::sql_row> rosetta::mysql_result::next() {
+    std::vector<MYSQL_BIND> binder_;
+    std::vector<std::shared_ptr<unsigned char>> values_;
+    std::vector<unsigned long> lengths_;
+    for(int i = 0; i < column_meta_->field_count; ++i){
+        MYSQL_BIND bind = {0};
+        bind.buffer_type = column_meta_->fields[i].type;
+        columns_.emplace(column_meta_->fields[i].name, i);
+        unsigned long length = column_meta_->fields[i].length;
+        switch (column_meta_->fields[i].type) {
+            case MYSQL_TYPE_TIMESTAMP:
+                length = sizeof(MYSQL_TIME);
+                break;
+        }
+        bind.buffer_length = std::min<std::uint64_t>(length, 1024*1024*1);
+        std::shared_ptr<unsigned char> buffer(new unsigned char[bind.buffer_length], std::default_delete<unsigned char[]>());
+        memset(buffer.get(), 0, bind.buffer_length);
+        bind.buffer = buffer.get();
+        unsigned long *length_ref = &lengths_.emplace_back(0);
+        bind.length = length_ref;
+        values_.push_back(buffer);
+        binder_.push_back(bind);
+    }
+    if(mysql_stmt_bind_result(statement_.get(), binder_.data()))
+        throw std::logic_error(mysql_stmt_error(statement_.get()));
+
+    if(mysql_stmt_fetch(statement_.get()))
+        return nullptr;
+    return std::make_shared<rosetta::mysql_row>(binder_, values_, lengths_);
+}
+

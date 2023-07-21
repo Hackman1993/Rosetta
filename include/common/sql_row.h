@@ -4,45 +4,24 @@
 
 #ifndef ROSETTA_SQL_ROW_H
 #define ROSETTA_SQL_ROW_H
+
 #include <string>
 #include <utility>
 #include "sql_result.h"
 #include <sahara/string/string.h>
+
 namespace rosetta {
-  class sql_row {
-  public:
-    sql_row(sql_result& result, std::uint32_t row) : result_(result), row_(row){};
+    class sql_row {
+    public:
+        virtual ~sql_row() = default;
 
+        virtual std::size_t column_count() = 0;
 
-    template <typename ResultType>
-    ResultType get(sahara::string col_name){
-      return result_.template get<ResultType>(row_ ,col_name);
-    }
+        virtual sahara::string to_json() = 0;
 
-    template <typename ResultType>
-    ResultType get(std::uint32_t col_name){
-      return result_.template get<ResultType>(row_ ,col_name);
-    }
+        virtual rosetta::core::sql_param_value get_column(std::size_t column) = 0;
 
-    std::size_t column_count(){
-      return result_.column_count();
-    }
-
-      sahara::string column_name(std::uint32_t column) {
-      return result_.column_name(column);
-    }
-
-      sahara::string column_type(std::uint32_t column) {
-      return result_.column_type(column);
-    }
-
-      sahara::string to_json();
-
-
-  protected:
-    sql_result& result_;
-    std::uint32_t row_;
-  };
+    };
 
 } // rosetta
 

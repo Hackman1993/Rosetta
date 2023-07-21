@@ -75,63 +75,10 @@
 
 #include "mysql_impl/mysql_statement.h"
 #include "mysql_impl/mysql_connection.h"
+#include "mysql_impl/mysql_result.h"
+
 namespace rosetta{
-    struct visitor{
-        MYSQL_BIND operator()(const rosetta::core::integer& value){
-            MYSQL_BIND bind = {nullptr};
-            bind.buffer_type = value.is_null()? MYSQL_TYPE_NULL : MYSQL_TYPE_LONGLONG;
-            bind.buffer = value.is_null()? nullptr : (void*)&std::get<std::int64_t>(value);
-            bind.buffer_length = sizeof(std::int64_t);
-            return bind;
-        }
 
-        MYSQL_BIND operator()(const rosetta::core::boolean& value){
-            MYSQL_BIND bind = {nullptr};
-            bind.buffer_type = value.is_null()? MYSQL_TYPE_NULL : MYSQL_TYPE_BIT;
-            bind.buffer = value.is_null()? nullptr : (void*)&std::get<bool>(value);
-            bind.buffer_length = sizeof(bool);
-            return bind;
-        }
-
-        MYSQL_BIND operator()(const rosetta::core::long_double & value){
-            MYSQL_BIND bind = {nullptr};
-            bind.buffer_type = value.is_null()? MYSQL_TYPE_NULL : MYSQL_TYPE_DOUBLE;
-            bind.buffer = value.is_null()? nullptr : (void*)&std::get<long double>(value);
-            bind.buffer_length = sizeof(long double);
-            return bind;
-        }
-
-        MYSQL_BIND operator()(const rosetta::core::string & value){
-            MYSQL_BIND bind = {nullptr};
-            bind.buffer_type = value.is_null()? MYSQL_TYPE_NULL : MYSQL_TYPE_VARCHAR;
-            if(!value.is_null()){
-                auto& actual_value = std::get<std::string>(value);
-                bind.buffer_length = actual_value.length();
-                bind.buffer = value.is_null()? nullptr : data;
-            }
-            return bind;
-        }
-
-        MYSQL_BIND operator()(const rosetta::core::unsigned_integer & value){
-            MYSQL_BIND bind = {nullptr};
-            bind.is_unsigned = true;
-            bind.buffer_type = value.is_null()? MYSQL_TYPE_NULL : MYSQL_TYPE_LONGLONG;
-            bind.buffer = value.is_null()? nullptr : (void*)&std::get<std::uint64_t>(value);
-            bind.buffer_length = sizeof(std::uint64_t);
-            return bind;
-        }
-
-        MYSQL_BIND operator()(const rosetta::core::timestamp & value){
-            MYSQL_BIND bind = {nullptr};
-            bind.buffer_type = value.is_null()? MYSQL_TYPE_NULL : MYSQL_TYPE_DOUBLE;
-            if(!value.is_null()){
-                auto actual_value = std::get<sahara::time::timestamp>(value).to_string().to_std();
-                bind.buffer_length = actual_value.length();
-                bind.buffer = actual_value.data();
-            }
-            return bind;
-        }
-    };
 
     mysql_statement::mysql_statement(mysql_connection& connection, const std::string &sql, MYSQL_STMT* statement): sql_statement(connection, sql) {
         statement_ = std::shared_ptr<MYSQL_STMT>(statement, [](MYSQL_STMT* stmt){
@@ -143,17 +90,22 @@ namespace rosetta{
 
     }
 
-    std::shared_ptr<sql_result> mysql_statement::execute() {
-        auto ret = mysql_stmt_bind_param(statement_.get(), bind_.data());
-        auto test2 = mysql_stmt_error(statement_.get());
-        auto test = mysql_stmt_execute(statement_.get());
-
-        return nullptr;
+    void mysql_statement::execute() {
+        if(mysql_stmt_bind_param(statement_.get(), bind_.data()))
+            throw std::logic_error(mysql_stmt_error(statement_.get()));
+        if(mysql_stmt_execute(statement_.get()))
+            throw std::logic_error(mysql_stmt_error(statement_.get()));
+        visitor_.values_.clear();
+        bind_.clear();
     }
 
-    void mysql_statement::bind_param(rosetta::core::sql_value value) {
-        auto bind = std::visit(visitor(), value);
+    void mysql_statement::bind_param(rosetta::core::sql_param_value value) {
+        auto bind = std::visit(visitor_, value);
         bind_.push_back(bind);
+    }
+
+    std::shared_ptr<sql_result> mysql_statement::get() {
+        return std::make_shared<mysql_result>(statement_);
     }
 
 }

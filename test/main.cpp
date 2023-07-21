@@ -8,11 +8,12 @@
 #include "database_pool.h"
 #include "mysql_impl/mysql_connection.h"
 #include <mysql/mysql.h>
-
+#include <common/sql_row.h>
 using namespace std::chrono_literals;
 
 
 int main() {
+
     try {
         rosetta::core::select select_builder({"code", "permission_id"});
         select_builder.distinct().from({{"t_permission", "a"}}).inner_join(rosetta::core::alia{"t_mid_role_permission", "b"}, [&](rosetta::core::joins &join) {
@@ -36,13 +37,15 @@ int main() {
             }
         }
         auto connection = pool.get_connection<rosetta::mysql_connection>();
-        auto statement = connection->prepared_statement("insert into t_test(string_) values(?)");
-        rosetta::core::string str = std::string("Hello World");
-        statement->bind_param(str);
+        auto statement = connection->prepared_statement("select date_,longtext_ from t_test");
         statement->execute();
-//    //statement.bind_param(1, "002d1a7cb7814a3bbefe43039d13a03c");
-//    auto result = statement->execute();
-//    auto count = result->get<rosetta::string>(1, "user_id");
+        auto result = statement->get();
+        auto row1 = result->next();
+        auto val1 = row1->get_column(1);
+        auto row2 = result->next();
+        auto val2 = row2->get_column(1);
+
+
         while (true);
 
     } catch (std::exception &e) {

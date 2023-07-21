@@ -4,18 +4,23 @@
 
 #ifndef ROSETTA_MYSQL_STATEMENT_H
 #define ROSETTA_MYSQL_STATEMENT_H
+
 #include "common/sql_statement.h"
 #include <unordered_map>
-#include <mysql/mysql.h>
+#include "bind_visitor.h"
 namespace rosetta {
 
-  class mysql_connection;
-  class mysql_result;
-  class mysql_statement : public sql_statement{
-  public:
-    mysql_statement(mysql_connection& connection, const std::string& sql, MYSQL_STMT* statement);
-    std::shared_ptr<sql_result> execute() override;
-    void bind_param(rosetta::core::sql_value value) override;
+    class mysql_connection;
+
+    struct visitor;
+    class mysql_statement : public sql_statement {
+    public:
+        mysql_statement(mysql_connection &connection, const std::string &sql, MYSQL_STMT *statement);
+
+        void execute() override;
+        std::shared_ptr<sql_result> get() override;
+
+        void bind_param(rosetta::core::sql_param_value value) override;
 
 //    void bind_param(std::uint32_t param_id, rosetta::string data) override;
 //
@@ -29,11 +34,13 @@ namespace rosetta {
 //
 //    void bind_param(std::uint32_t param_id, rosetta::unsigned_integer data) override;
 
-    ~mysql_statement();
-  private:
-      std::shared_ptr<MYSQL_STMT> statement_;
-      std::vector<MYSQL_BIND> bind_;
-  };
+        ~mysql_statement();
+
+    private:
+        std::shared_ptr<MYSQL_STMT> statement_;
+        std::vector<MYSQL_BIND> bind_;
+        bind_visitor visitor_;
+    };
 
 } // rosetta
 

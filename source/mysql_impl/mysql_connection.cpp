@@ -40,7 +40,7 @@ namespace rosetta {
     }
 
     void mysql_connection::commit_transaction() {
-        if (!mysql_commit(connection_.get()))
+        if (mysql_commit(connection_.get()))
             throw sahara::exception::database_exception(5102, "Commit Transaction Failed");
     }
 
