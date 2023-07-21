@@ -19,7 +19,7 @@ namespace rosetta::core {
     using sql_value = std::variant<std::reference_wrapper<long_double>, std::reference_wrapper<boolean>, std::reference_wrapper<integer>,
             std::reference_wrapper<string>, std::reference_wrapper<unsigned_integer>, std::reference_wrapper<timestamp>>;
 
-    using sql_param_value = std::variant<long double, bool, std::int64_t, std::string, std::uint64_t , timestamp, nullptr_t>;
+    using sql_param_value = std::variant<nullptr_t, long double, bool, std::int64_t, std::string, std::uint64_t , timestamp>;
 
 } // core
 
