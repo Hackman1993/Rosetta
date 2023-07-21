@@ -24,7 +24,6 @@ namespace rosetta::core {
                 break;
         }
         ss << table_.name << (table_.alias.empty()? " ":" AS " + table_.alias + " ");
-        if(callback_) callback_(*this);
         bool first = true;
         for(auto & on : ons_){
             if(first){
@@ -39,7 +38,7 @@ namespace rosetta::core {
     }
 
     joins::joins(alia table, E_JOIN_TYPE type, const std::function<void(joins &)> &callback) : use_table(std::move(table)), type_(type), callback_(callback) {
-
+        if(callback_) callback_(*this);
     }
 
     joins::joins(const std::string &table, E_JOIN_TYPE type, const std::function<void(joins &)> &callback) : use_table(table), type_(type), callback_(callback) {

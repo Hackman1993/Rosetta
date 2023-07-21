@@ -13,10 +13,17 @@ using namespace std::chrono_literals;
 
 
 int main() {
+    rosetta::core::select bbb({"user_id", "username", "password"});
+    auto te = bbb.from({{"t_user", ""}}).where("username", "=", "?").where("deleted_at", "is", "null").inner_join(rosetta::core::alia{"t_user_access_token", "b"},[&](auto &join){
+        join.on("user_id", "=", "user_id");
+    });
+    auto te1 = te.compile();
+    auto te2 = te.compile();
 
     try {
         rosetta::core::select select_builder({"user_id", "username", "password"});
         select_builder.from({{"t_user", ""}}).where("username", "=", "?");
+
 
         auto test = select_builder.compile();
 
