@@ -46,10 +46,16 @@ namespace rosetta {
 
     void mysql_connection::refresh() {
         try {
-            auto query_result = mysql_query(connection_.get(), "select 1");
-            if (query_result) {
-                throw sahara::exception::database_exception(5103, "Connection Refresh Failed");
+            if(auto val = mysql_more_results(connection_.get())){
+                if(val == 1){
+                    mysql_next_result(connection_.get());
+                }
+            }
+            if (mysql_query(connection_.get(), "select 1;")) {
+                throw sahara::exception::database_exception(5103, mysql_error(connection_.get()));
             } else {
+                MYSQL_RES* res = mysql_store_result(connection_.get());
+                mysql_free_result(res);
                 last_active_ = std::chrono::steady_clock::now();
             }
         } catch (std::exception &e) {
