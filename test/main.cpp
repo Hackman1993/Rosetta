@@ -39,10 +39,12 @@ int main() {
         statement->execute();
         auto result = statement->get();
         auto row = result->next();
-        auto vari = row->get_column(0);
         std::string uid = std::get<std::string>(row->get_column(0));
         std::string uname = std::get<std::string>(row->get_column(1));
         std::string pwd = std::get<std::string>(row->get_column(2));
+        std::cout << uid.length() << ":" << uid.size() << std::endl;
+        std::cout << uname.length() << ":" << uname.size() << std::endl;
+        std::cout << pwd.length() << ":" << pwd.size() << std::endl;
 
         auto bca = result->count();
         auto row1 = result->next();

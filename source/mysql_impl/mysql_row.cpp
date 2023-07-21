@@ -24,10 +24,13 @@ namespace rosetta {
         switch(bind_[column].buffer_type)
         {
             case MYSQL_TYPE_BLOB:
-                value = std::string((const char*)data_[column].get(), length_[column]);
+                value = std::string((const char*)data_[column].get(), strlen((const char*)data_[column].get()));
                 break;
             case MYSQL_TYPE_STRING:
-                value = std::string((const char*)data_[column].get(), *bind_[column].length);
+                value = std::string((const char*)data_[column].get(), strlen((const char*)data_[column].get()));
+                break;
+            case MYSQL_TYPE_VAR_STRING:
+                value = std::string((const char*)data_[column].get(), strlen((const char*)data_[column].get()));
                 break;
             case MYSQL_TYPE_TIMESTAMP:
                 MYSQL_TIME *time= (MYSQL_TIME *)data_[column].get();
