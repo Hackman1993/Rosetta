@@ -3,7 +3,7 @@
 namespace rosetta::core{
     std::string condition::compile() {
         std::stringstream ss;
-        ss << column_ << operator_ << value_ << " ";
+        ss << column_ << " " << operator_ << " " << value_ << " ";
         return ss.str();
     }
 
