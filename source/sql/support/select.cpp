@@ -91,12 +91,12 @@ namespace rosetta {
         }
 
         select &select::left_join(const alia& table, const std::function<void(joins &)> &callback) {
-            joins_.emplace_back(table, JOIN_TYPE_INNER, callback);
+            joins_.emplace_back(table, JOIN_TYPE_LEFT, callback);
             return *this;
         }
 
         select &select::left_join(std::string table, const std::function<void(joins &)> &callback) {
-            joins_.emplace_back(alia{std::move(table), ""}, JOIN_TYPE_INNER, callback);
+            joins_.emplace_back(alia{std::move(table), ""}, JOIN_TYPE_LEFT, callback);
             return *this;
         }
 
