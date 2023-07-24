@@ -8,8 +8,7 @@
 #include <string>
 #include <utility>
 #include <sahara/string/string.h>
-#include "common/sql/support/sql_value.h"
-
+#include "sql/support/sql_value.h"
 namespace rosetta {
   class sql_result;
   class sql_statement_base {
