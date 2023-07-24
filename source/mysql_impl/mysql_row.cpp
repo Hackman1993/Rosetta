@@ -103,4 +103,8 @@ namespace rosetta {
         return value;
     }
 
+    mysql_row::~mysql_row() {
+
+    }
+
 } // rosetta

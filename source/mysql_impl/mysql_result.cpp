@@ -206,7 +206,7 @@ std::shared_ptr<rosetta::sql_row> rosetta::mysql_result::next() {
                 break;
         }
         bind.buffer_length = std::min<std::uint64_t>(length, 1024*1024*1);
-        std::shared_ptr<unsigned char> buffer(new unsigned char[bind.buffer_length], std::default_delete<unsigned char[]>());
+        std::shared_ptr<unsigned char> buffer(new unsigned char[bind.buffer_length], [](unsigned char *p){});
         memset(buffer.get(), 0, bind.buffer_length);
         bind.buffer = buffer.get();
         auto &data = meta_.emplace_back(buffer, 0, false);
@@ -220,5 +220,8 @@ std::shared_ptr<rosetta::sql_row> rosetta::mysql_result::next() {
     if(mysql_stmt_fetch(statement_.get()))
         return nullptr;
     return std::make_shared<rosetta::mysql_row>(binder_, meta_);
+}
+
+rosetta::mysql_result::~mysql_result() {
 }
 

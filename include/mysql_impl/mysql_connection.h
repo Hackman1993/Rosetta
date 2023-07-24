@@ -27,6 +27,7 @@ namespace rosetta {
 
   protected:
     std::shared_ptr<MYSQL> connection_;
+    std::shared_ptr<mysql_statement> statement_;
     bool connected_ = false;
     friend class mysql_statement;
   };

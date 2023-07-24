@@ -12,6 +12,7 @@
 #include <boost/json.hpp>
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
+
 using namespace std::chrono_literals;
 
 
@@ -29,7 +30,7 @@ int main() {
         }
         {
             rosetta::core::select select_builder({"user_id", "username", "password", "token"});
-            auto te = select_builder.from({{"t_user", ""}}).where("username", "=", "?").where("deleted_at", "is", "null").left_join(rosetta::core::alia{"t_user_access_token", "b"},[&](auto &join){
+            auto te = select_builder.from({{"t_user", ""}}).where("username", "=", "?").where("deleted_at", "is", "null").left_join(rosetta::core::alia{"t_user_access_token", "b"}, [&](auto &join) {
                 join.on("user_id", "=", "b.fn_user_id");
             });
             auto connection = pool.get_connection<rosetta::mysql_connection>();
@@ -46,13 +47,16 @@ int main() {
             std::string pwd = std::get<std::string>(row->get_column(2));
             rosetta::core::sql_param_value vtoken = row->get_column(3);
             std::string token;
-            if(vtoken.index() == 0){
+            if (vtoken.index() == 0) {
                 token = boost::uuids::to_string(boost::uuids::random_generator()());
+                statement->reset();
                 statement = connection->prepared_statement("INSERT INTO t_user_access_token(fn_user_id, token) VALUES (?, ?)");
-                statement->bind_param(uid);
-                statement->bind_param(token);
-                statement->execute();
-            }else{
+                if (statement) {
+                    statement->bind_param(uid);
+                    statement->bind_param(token);
+                    statement->execute();
+                }
+            } else {
                 token = std::get<std::string>(vtoken);
             }
         }

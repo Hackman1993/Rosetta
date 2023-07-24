@@ -22,7 +22,7 @@ namespace rosetta {
     public:
         mysql_row(std::vector<MYSQL_BIND> bind, std::vector<mysql_cell_data> meta);
 
-        ~mysql_row() override = default;
+        virtual ~mysql_row();
 
         size_t column_count() override;
 

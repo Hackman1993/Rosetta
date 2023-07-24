@@ -93,8 +93,12 @@ namespace rosetta{
     void mysql_statement::execute() {
         if(mysql_stmt_bind_param(statement_.get(), bind_.data()))
             throw std::logic_error(mysql_stmt_error(statement_.get()));
-        if(mysql_stmt_execute(statement_.get()))
+        if(mysql_stmt_execute(statement_.get())){
+            std::cout << mysql_stmt_error(statement_.get()) << std::endl;
+            unsigned long long ** v = (unsigned long long **)bind_[0].buffer;
+            std::cout << **v <<std::endl;
             throw std::logic_error(mysql_stmt_error(statement_.get()));
+        }
         visitor_.values_.clear();
         bind_.clear();
     }
@@ -107,6 +111,14 @@ namespace rosetta{
     std::shared_ptr<sql_result> mysql_statement::get() {
         return std::make_shared<mysql_result>(statement_);
     }
+
+    void mysql_statement::reset() {
+        if(mysql_stmt_reset(statement_.get())){
+            std::cout << mysql_stmt_error(statement_.get()) << std::endl;
+        }
+
+    }
+
 
 }
 

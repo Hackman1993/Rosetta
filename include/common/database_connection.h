@@ -11,7 +11,8 @@ namespace rosetta {
   class database_connection : public database_connection_base{
   public:
     database_connection(const std::string &host, unsigned short port, const std::string &username, const std::string &password, const std::string &database) : database_connection_base(host, port, username, password, database){};
-    virtual void refresh() = 0;
+
+
   protected:
   };
 

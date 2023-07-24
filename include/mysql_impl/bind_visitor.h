@@ -12,31 +12,31 @@
 namespace rosetta {
 
     struct bind_visitor {
-        std::vector<core::sql_param_value> values_;
+        std::vector<std::shared_ptr<core::sql_param_value>> values_;
 
         MYSQL_BIND operator()(std::int64_t value) {
             MYSQL_BIND bind = {nullptr};
-            core::sql_param_value &val = values_.emplace_back(value);
+            auto &val = values_.emplace_back(std::make_shared<core::sql_param_value>(value));
             bind.buffer_type = MYSQL_TYPE_LONGLONG;
-            bind.buffer = (void *) &std::get<std::int64_t>(val);
+            bind.buffer = val.get();
             bind.buffer_length = sizeof(std::int64_t);
             return bind;
         }
 
         MYSQL_BIND operator()(bool value) {
             MYSQL_BIND bind = {nullptr};
-            core::sql_param_value &val = values_.emplace_back(value);
+            auto &val = values_.emplace_back(std::make_shared<core::sql_param_value>(value));
             bind.buffer_type = MYSQL_TYPE_BIT;
-            bind.buffer = (void *) &std::get<bool>(val);
+            bind.buffer = val.get();
             bind.buffer_length = sizeof(bool);
             return bind;
         }
 
         MYSQL_BIND operator()(long double value) {
             MYSQL_BIND bind = {nullptr};
-            core::sql_param_value &val = values_.emplace_back(value);
+            auto &val = values_.emplace_back(std::make_shared<core::sql_param_value>(value));
             bind.buffer_type = MYSQL_TYPE_DOUBLE;
-            bind.buffer = (void *) &std::get<long double>(val);
+            bind.buffer = val.get();
             bind.buffer_length = sizeof(long double);
             return bind;
         }
@@ -44,28 +44,28 @@ namespace rosetta {
         MYSQL_BIND operator()(std::string value) {
             MYSQL_BIND bind = {nullptr};
             bind.buffer_type = MYSQL_TYPE_STRING;
-            core::sql_param_value &val = values_.emplace_back(value);
-            bind.buffer_length = value.length();
-            auto& v = std::get<std::string>(val);
-            bind.buffer = (void *) v.data();
+            auto &val = values_.emplace_back(std::make_shared<core::sql_param_value>(value));
+            auto &v = std::get<std::string>(*val);
+            bind.buffer_length = v.length();
+            bind.buffer = v.data();
             return bind;
         }
 
         MYSQL_BIND operator()(std::uint64_t value) {
-            core::sql_param_value &val = values_.emplace_back(value);
+            auto &val = values_.emplace_back(std::make_shared<core::sql_param_value>(value));
             MYSQL_BIND bind = {nullptr};
-            bind.is_unsigned = true;
+            //bind.is_unsigned = true;
             bind.buffer_type = MYSQL_TYPE_LONGLONG;
-            bind.buffer = (void *) &std::get<std::uint64_t>(val);
+            bind.buffer = val.get();
             bind.buffer_length = sizeof(std::uint64_t);
             return bind;
         }
 
         MYSQL_BIND operator()(sahara::time::timestamp value) {
+            auto &val = values_.emplace_back(std::make_shared<core::sql_param_value>(value));
             MYSQL_BIND bind = {nullptr};
             bind.buffer_type = MYSQL_TYPE_VARCHAR;
-            core::sql_param_value &val = values_.emplace_back(value.to_string().to_std());
-            auto &v = std::get<std::string>(val);
+            auto &v = std::get<std::string>(*val);
             bind.buffer_length = v.length();
             bind.buffer = (void *) v.data();
             return bind;

@@ -18,6 +18,7 @@ namespace rosetta {
 
     virtual sahara::string& to_string(){ return sql_; };
     virtual void execute() = 0;
+    virtual void reset() = 0;
     virtual void bind_param(rosetta::core::sql_param_value value) = 0;
     virtual std::shared_ptr<sql_result> get() = 0;
 

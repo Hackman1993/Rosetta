@@ -14,9 +14,11 @@ namespace rosetta {
     std::shared_ptr<sql_statement_base> mysql_connection::prepared_statement(const std::string &sql) {
         MYSQL_STMT *statement = mysql_stmt_init(connection_.get());
         if(!statement) return nullptr;
-        if(int ret = mysql_stmt_prepare(statement, sql.data(), sql.length()))
-            throw sahara::exception::database_exception(5101, std::format("Statement Prepare Failed with error:{}", mysql_stmt_error(statement)));
-        return std::make_shared<mysql_statement>(*this, sql, statement);
+        if(mysql_stmt_prepare(statement, sql.data(), sql.length())){
+            return nullptr;
+        }
+        statement_ = std::make_shared<mysql_statement>(*this, sql, statement);
+        return statement_;
     }
 
     mysql_connection::mysql_connection(const std::string &host, unsigned short port, const std::string &username, const std::string &password, const std::string &database) : database_connection(host, port, username, password, database) {

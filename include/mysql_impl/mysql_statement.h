@@ -20,6 +20,8 @@ namespace rosetta {
         void execute() override;
         std::shared_ptr<sql_result> get() override;
 
+        void reset() override;
+
         void bind_param(rosetta::core::sql_param_value value) override;
 
 //    void bind_param(std::uint32_t param_id, rosetta::string data) override;

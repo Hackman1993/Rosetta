@@ -16,8 +16,8 @@ namespace rosetta {
     public:
         mysql_result(std::shared_ptr<MYSQL_STMT> statement);
         size_t count() override;
-
         std::shared_ptr<sql_row> next() override;
+        virtual ~mysql_result();
 
     public:
         sahara::string column_name(std::size_t column) override;
