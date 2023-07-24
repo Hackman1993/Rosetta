@@ -82,8 +82,6 @@ namespace rosetta{
 
     mysql_statement::mysql_statement(mysql_connection& connection, const std::string &sql, MYSQL_STMT* statement): sql_statement(connection, sql) {
         statement_ = std::shared_ptr<MYSQL_STMT>(statement, [&](MYSQL_STMT* stmt){
-            std::cout << "mysql_stmt_free_result" << std::endl;
-            mysql_stmt_free_result(statement_.get());
             mysql_stmt_close(stmt);
         });
     }
