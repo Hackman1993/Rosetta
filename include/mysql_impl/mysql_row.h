@@ -6,12 +6,21 @@
 #define ROSETTA_MYSQL_ROW_H
 
 #include <mysql/mysql.h>
+
+#include <utility>
 #include "../common/sql_row.h"
 namespace rosetta {
 
+    struct mysql_cell_data{
+        mysql_cell_data(std::shared_ptr<unsigned char> data, unsigned long length, bool is_null) : data_(std::move(data)), length_(length), is_null_(is_null) {}
+        std::shared_ptr<unsigned char> data_;
+        unsigned long length_;
+        bool is_null_ = false;
+    };
+
     class mysql_row : public sql_row{
     public:
-        mysql_row(std::vector<MYSQL_BIND> bind, std::vector<std::shared_ptr<unsigned char>> data, std::vector<unsigned long> length);
+        mysql_row(std::vector<MYSQL_BIND> bind, std::vector<mysql_cell_data> meta);
 
         ~mysql_row() override = default;
 
@@ -22,9 +31,10 @@ namespace rosetta {
         sahara::string to_json() override;
     protected:
         std::vector<MYSQL_BIND> bind_;
-        std::vector<std::shared_ptr<unsigned char>> data_;
-        std::vector<unsigned long> length_;
+        std::vector<mysql_cell_data> meta_;
     };
+
+
 
 } // rosetta
 

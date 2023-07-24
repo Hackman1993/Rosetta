@@ -194,8 +194,7 @@ size_t rosetta::mysql_result::affected_rows() {
 
 std::shared_ptr<rosetta::sql_row> rosetta::mysql_result::next() {
     std::vector<MYSQL_BIND> binder_;
-    std::vector<std::shared_ptr<unsigned char>> values_;
-    std::vector<unsigned long> lengths_;
+    std::vector<mysql_cell_data> meta_;
     for(int i = 0; i < column_meta_->field_count; ++i){
         MYSQL_BIND bind = {0};
         bind.buffer_type = column_meta_->fields[i].type;
@@ -210,9 +209,9 @@ std::shared_ptr<rosetta::sql_row> rosetta::mysql_result::next() {
         std::shared_ptr<unsigned char> buffer(new unsigned char[bind.buffer_length], std::default_delete<unsigned char[]>());
         memset(buffer.get(), 0, bind.buffer_length);
         bind.buffer = buffer.get();
-        unsigned long *length_ref = &lengths_.emplace_back(0);
-        bind.length = length_ref;
-        values_.push_back(buffer);
+        auto &data = meta_.emplace_back(buffer, 0, false);
+        bind.length = &data.length_;
+        bind.is_null = &data.is_null_;
         binder_.push_back(bind);
     }
     if(mysql_stmt_bind_result(statement_.get(), binder_.data()))
@@ -220,6 +219,6 @@ std::shared_ptr<rosetta::sql_row> rosetta::mysql_result::next() {
 
     if(mysql_stmt_fetch(statement_.get()))
         return nullptr;
-    return std::make_shared<rosetta::mysql_row>(binder_, values_, lengths_);
+    return std::make_shared<rosetta::mysql_row>(binder_, meta_);
 }
 

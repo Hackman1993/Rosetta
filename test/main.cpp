@@ -9,12 +9,13 @@
 #include "mysql_impl/mysql_connection.h"
 #include <mysql/mysql.h>
 #include <common/sql_row.h>
+
 using namespace std::chrono_literals;
 
 
 int main() {
-    rosetta::core::select bbb({"user_id", "username", "password"});
-    auto te = bbb.from({{"t_user", ""}}).where("username", "=", "?").where("deleted_at", "is", "null").left_join(rosetta::core::alia{"t_user_access_token", "b"},[&](auto &join){
+    rosetta::core::select bbb({"user_id", "username", "password", "token"});
+    auto te = bbb.from({{"t_user", ""}}).where("username", "=", "?").where("deleted_at", "is", "null").left_join(rosetta::core::alia{"t_user_access_token", "b"}, [&](auto &join) {
         join.on("user_id", "=", "b.fn_user_id");
     });
     auto te1 = te.compile();
@@ -38,17 +39,19 @@ int main() {
             }
         }
         {
-        auto connection = pool.get_connection<rosetta::mysql_connection>();
-        auto statement = connection->prepared_statement(test);
-        statement->bind_param(std::string("admin"));
-        statement->execute();
-        auto result = statement->get();
-        auto row = result->next();
-        auto uid = std::get<std::uint64_t>(row->get_column(0));
-        std::string uname = std::get<std::string>(row->get_column(1));
-        std::string pwd = std::get<std::string>(row->get_column(2));
-        std::cout << uname.length() << ":" << uname.size() << std::endl;
-        std::cout << pwd.length() << ":" << pwd.size() << std::endl;
+            auto connection = pool.get_connection<rosetta::mysql_connection>();
+            auto statement = connection->prepared_statement(test);
+            statement->bind_param(std::string("admin"));
+            statement->execute();
+            auto result = statement->get();
+            auto count  = result->count();
+            auto row = result->next();
+            auto uid = std::get<std::uint64_t>(row->get_column(0));
+            std::string uname = std::get<std::string>(row->get_column(1));
+            std::string pwd = std::get<std::string>(row->get_column(2));
+            rosetta::core::sql_param_value vtoken = row->get_column(3);
+            std::cout << uname.length() << ":" << uname.size() << std::endl;
+            std::cout << pwd.length() << ":" << pwd.size() << std::endl;
         }
 
         while (true);
