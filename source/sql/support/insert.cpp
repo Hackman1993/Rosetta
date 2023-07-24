@@ -17,9 +17,9 @@ namespace rosetta::core {
     std::string insert::compile() {
         std::stringstream ss;
         std::stringstream values;
-        if(table_.name.empty())
+        if(table_.name_.empty())
             throw std::runtime_error("table name is empty");
-        ss << "INSERT INTO " << table_.name << " (";
+        ss << "INSERT INTO " << table_.name_ << " (";
         bool first = true;
         if(columns_.empty())
             throw std::runtime_error("columns is empty");

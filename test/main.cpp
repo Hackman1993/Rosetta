@@ -29,10 +29,17 @@ int main() {
             }
         }
         {
-            rosetta::core::select select_builder({"user_id", "username", "password", "token"});
-            auto te = select_builder.from({{"t_user", ""}}).where("username", "=", "?").where("deleted_at", "is", "null").left_join(rosetta::core::alia{"t_user_access_token", "b"}, [&](auto &join) {
-                join.on("user_id", "=", "b.fn_user_id");
-            });
+            rosetta::core::select select_builder({"code"});
+            select_builder.from({{"t_permission", "a"}}).inner_join({"t_mid_role_permission", "b"},[&](auto &join){
+                join.on("a.permission_id", "=", "b.permission_id");
+            })
+            .inner_join({"t_mid_user_role", "c"}, [&](auto &join2){
+                join2.on("b.role_id", "=", "c.role_id");
+            }).inner_join(rosetta::core::alia{"t_user_access_token", "d"}, [&](auto &join3){
+                join3.on("c.user_id", "=", "d.fn_user_id");
+            })
+            .where("d.token", "=", "?");
+            auto test = select_builder.compile();
             auto connection = pool.get_connection<rosetta::mysql_connection>();
             auto s = select_builder.compile();
 

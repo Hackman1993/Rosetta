@@ -22,8 +22,8 @@ namespace rosetta {
                     first = false;
                 else ss << ",";
 
-                ss << column.name ;
-                if(!column.alias.empty()) ss << " AS " << column.alias;
+                ss << column.name_ ;
+                if(!column.alias_.empty()) ss << " AS " << column.alias_;
             }
             ss << " FROM ";
             if(tables_.empty())
@@ -34,8 +34,8 @@ namespace rosetta {
                 if(first)
                     first = false;
                 else ss << ",";
-                ss << table.name;
-                if(!table.alias.empty()) ss << " AS " << table.alias;
+                ss << table.name_;
+                if(!table.alias_.empty()) ss << " AS " << table.alias_;
                 ss << " ";
             }
 
@@ -77,11 +77,6 @@ namespace rosetta {
 
         select &select::inner_join(const alia& table, const std::function<void(joins &)> &callback) {
             joins_.emplace_back(table, JOIN_TYPE_INNER, callback);
-            return *this;
-        }
-
-        select &select::inner_join(std::string table, const std::function<void(joins &)> &callback) {
-            joins_.emplace_back(alia{std::move(table), ""}, JOIN_TYPE_INNER, callback);
             return *this;
         }
 

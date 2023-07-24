@@ -23,7 +23,7 @@ namespace rosetta::core {
                 ss << "RIGHT JOIN ";
                 break;
         }
-        ss << table_.name << (table_.alias.empty()? " ":" AS " + table_.alias + " ");
+        ss << table_.name_ << (table_.alias_.empty()? " ":" AS " + table_.alias_ + " ");
         bool first = true;
         for(auto & on : ons_){
             if(first){

@@ -6,6 +6,7 @@
 #define ROSETTA_OPERATE_BASE_H
 
 #include <string>
+#include <utility>
 
 namespace rosetta::core {
 
@@ -24,8 +25,8 @@ namespace rosetta::core {
     };
 
     struct alia{
-        std::string name;
-        std::string alias;
+        std::string name_;
+        std::string alias_;
     };
 
 } // core

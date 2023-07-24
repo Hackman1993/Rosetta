@@ -9,7 +9,7 @@ namespace rosetta::core {
     std::string del::compile() {
         std::stringstream ss;
         std::stringstream values;
-        ss << "DELETE FROM " << table_.name << " ";
+        ss << "DELETE FROM " << table_.name_ << " ";
         bool first = true;
 
         for(auto &where : wheres_){

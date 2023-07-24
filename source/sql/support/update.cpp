@@ -9,9 +9,9 @@
 namespace rosetta::core {
     std::string update::compile() {
         std::stringstream ss;
-        if (table_.name.empty())
+        if (table_.name_.empty())
             throw std::runtime_error("table name is empty");
-        ss << "UPDATE " << table_.name << " SET ";
+        ss << "UPDATE " << table_.name_ << " SET ";
 
         bool first = true;
         for (auto &column: columns_) {
