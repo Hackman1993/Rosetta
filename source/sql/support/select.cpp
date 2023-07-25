@@ -66,6 +66,12 @@ namespace rosetta {
             return *this;
         }
 
+        select &select::where_in(const std::string &column, std::uint32_t value) {
+            auto where_condition = std::make_shared<where_in_>(column, value);
+            wheres_.emplace_back(where_condition);
+            return *this;
+        }
+
         select::select(std::initializer_list<std::string> columns) : use_column_alias(columns), use_tables(std::vector<alia>{}){}
 
         select::select(std::vector<alia> columns) : use_column_alias(std::move(columns)), use_tables(std::vector<alia>{}){}
@@ -94,6 +100,8 @@ namespace rosetta {
             joins_.emplace_back(alia{std::move(table), ""}, JOIN_TYPE_LEFT, callback);
             return *this;
         }
+
+
 
 
     } // rosetta

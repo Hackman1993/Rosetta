@@ -20,6 +20,7 @@ namespace rosetta::core {
         select& from(std::initializer_list<alia> tables);
         std::string compile() override;
         select& where(const std::string& column, const std::string& operate, const std::string& value);
+        select& where_in(const std::string& column, std::uint32_t value);
 
         select& inner_join(const alia& table, const std::function<void (joins&)>& callback);
         select& left_join(const alia& table, const std::function<void (joins&)>& callback);
