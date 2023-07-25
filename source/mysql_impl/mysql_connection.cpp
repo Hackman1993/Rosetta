@@ -51,6 +51,7 @@ namespace rosetta {
 
     void mysql_connection::refresh() {
         try {
+            std::cout << "Refreshing Connection" << std::endl;
             if(auto val = mysql_more_results(connection_.get())){
                 if(val == 1){
                     mysql_next_result(connection_.get());
