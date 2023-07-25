@@ -7,7 +7,7 @@ namespace rosetta::core{
         return ss.str();
     }
 
-    std::string where_in::compile() {
+    std::string where_in_::compile() {
         if(!values_count_)
             return "";
         std::stringstream ss;

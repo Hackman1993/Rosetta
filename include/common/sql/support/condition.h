@@ -22,7 +22,7 @@ namespace rosetta::core {
 
     class where_in_ : public operate_base{
     public:
-        where_in(std::string column, std::uint32_t count) : column_(std::move(column)), values_count_(count) {};
+        where_in_(std::string column, std::uint32_t count) : column_(std::move(column)), values_count_(count) {};
         std::string compile() override;
     protected:
         std::string column_;
