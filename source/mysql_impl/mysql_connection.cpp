@@ -4,6 +4,7 @@
 #include <sahara/exception/database_exception.h>
 #include <sstream>
 #include <mysql/mysql.h>
+#include <sahara/log/log.h>
 
 namespace rosetta {
 
@@ -61,7 +62,7 @@ namespace rosetta {
                 last_active_ = std::chrono::steady_clock::now();
             }
         } catch (std::exception &e) {
-            std::cout << e.what() << std::endl;
+            LOG_MODULE_DEBUG("rosetta", "{}", e.what());
         }
     }
 

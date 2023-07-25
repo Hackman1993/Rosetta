@@ -17,7 +17,7 @@ include_directories(D:/Workspace/Cpp/libsahara/include)
 
 add_library(rosetta STATIC ${CPP_HEADERS} ${CPP_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE Boost::thread fmt::fmt-header-only ${MYSQL_LIBRARIES} sahara::sahara)
+target_link_libraries(${PROJECT_NAME} PRIVATE Boost::thread fmt::fmt ${MYSQL_LIBRARIES} sahara::sahara)
 
 
 configure_package_config_file(cmake/template/${PROJECT_NAME}.in.cmake
@@ -47,6 +47,6 @@ install(EXPORT ${PROJECT_NAME}-targets NAMESPACE ${PROJECT_NAME}:: DESTINATION s
 file(GLOB_RECURSE TEST_SOURCES test/*.h test/*.hpp test/*.cpp test/*.cc)
 add_executable(${PROJECT_NAME}_test ${TEST_SOURCES} )
 find_package(sahara REQUIRED)
-find_package(Boost REQUIRED json)
+find_package(Boost REQUIRED COMPONENTS json log)
 target_include_directories(${PROJECT_NAME}_test PRIVATE include)
-target_link_libraries(${PROJECT_NAME}_test PRIVATE ws2_32 Boost::locale sahara::sahara rosetta fmt::fmt)
+target_link_libraries(${PROJECT_NAME}_test PRIVATE ws2_32 Boost::locale Boost::log rosetta fmt::fmt)

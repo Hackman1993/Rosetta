@@ -12,8 +12,8 @@
 #include <condition_variable>
 #include <boost/polymorphic_pointer_cast.hpp>
 #include <utility>
+#include <sahara/log/log.h>
 #include "common/database_connection_base.h"
-
 namespace rosetta {
     using namespace std::chrono_literals;
 
@@ -36,8 +36,8 @@ namespace rosetta {
                             connections_.push_back(std::shared_ptr<Connection>(new Connection(host_, port_, username_, password_, database_), std::bind(&database_pool::deletor<Connection>, this, std::placeholders::_1)));
                             //connections_.emplace_back(std::make_shared<Connection>(host_, port_, username_, password_, database_));
                         }
-                    } catch (std::exception &exception) {
-                        std::cout << exception.what() << std::endl;
+                    } catch (std::exception &e) {
+                        LOG_MODULE_DEBUG("rosetta", "{}", e.what());
                     }
                 }
             });
