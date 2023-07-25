@@ -16,6 +16,7 @@ namespace rosetta {
         MYSQL_STMT *statement = mysql_stmt_init(connection_.get());
         if(!statement) return nullptr;
         if(mysql_stmt_prepare(statement, sql.data(), sql.length())){
+            LOG_MODULE_DEBUG("rosetta", "{}", mysql_stmt_error(statement));
             return nullptr;
         }
         statement_ = std::make_shared<mysql_statement>(*this, sql, statement);
