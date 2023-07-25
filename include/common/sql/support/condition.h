@@ -5,7 +5,7 @@
 #ifndef ROSETTA_CONDITION_H
 #define ROSETTA_CONDITION_H
 #include <utility>
-
+#include "sql_value.h"
 #include "operate_base.h"
 namespace rosetta::core {
 
@@ -18,6 +18,15 @@ namespace rosetta::core {
         std::string column_;
         std::string operator_;
         std::string value_;
+    };
+
+    class where_in : public operate_base{
+    public:
+        where_in(std::string column, std::uint32_t count) : column_(std::move(column)), values_count_(count) {};
+        std::string compile() override;
+    protected:
+        std::string column_;
+        std::uint32_t values_count_ = 0;
     };
 
 } // core
