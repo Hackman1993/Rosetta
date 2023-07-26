@@ -36,7 +36,7 @@ namespace rosetta {
 //
 //    void bind_param(std::uint32_t param_id, rosetta::unsigned_integer data) override;
 
-        ~mysql_statement();
+        ~mysql_statement() override;
 
     private:
         std::shared_ptr<MYSQL_STMT> statement_;

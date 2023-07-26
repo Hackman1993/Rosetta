@@ -14,7 +14,7 @@ namespace rosetta {
   class sql_statement_base {
   public:
     explicit sql_statement_base(const std::string& statement): sql_(statement){}
-    virtual ~sql_statement_base() = default;
+    virtual ~sql_statement_base()  = default;
 
     virtual sahara::string& to_string(){ return sql_; };
     virtual void execute() = 0;
@@ -29,6 +29,7 @@ namespace rosetta {
 //    virtual void bind_param(std::uint32_t param_id, rosetta::long_double data) = 0;
 //    virtual void bind_param(std::uint32_t param_id, rosetta::unsigned_integer data) = 0;
   protected:
+      virtual void close_() {};
       sahara::string sql_;
   };
 

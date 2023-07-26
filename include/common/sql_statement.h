@@ -13,7 +13,9 @@ namespace rosetta {
   class sql_statement : public sql_statement_base{
   public:
     sql_statement(database_connection& connection, const std::string& sql): sql_statement_base(sql), connection_(connection){}
-    virtual ~sql_statement() = default;
+    ~sql_statement() override{
+        this->close_();
+    };
 
 
   protected:
