@@ -14,6 +14,7 @@ namespace rosetta {
   class sql_statement_base {
   public:
     explicit sql_statement_base(const std::string& statement): sql_(statement){}
+    virtual ~sql_statement_base() = default;
 
     virtual sahara::string& to_string(){ return sql_; };
     virtual void execute() = 0;
