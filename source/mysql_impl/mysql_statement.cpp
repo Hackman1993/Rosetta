@@ -125,6 +125,10 @@ namespace rosetta{
 
     }
 
+    void mysql_statement::close_() {
+
+    }
+
 
 }
 
