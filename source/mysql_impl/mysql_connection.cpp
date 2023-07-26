@@ -34,32 +34,38 @@ namespace rosetta {
             throw sahara::exception::database_exception(5100, message);
         }
         connection_ = std::shared_ptr<MYSQL>(connection, [](MYSQL *connection) {
+            std::cout << "MYSQL_CLOSE" << std::endl;
             mysql_close(connection);
         });
         connected_ = true;
     }
 
     void mysql_connection::begin_transaction() {
+        std::cout << "MYSQL_AUTOCOMMIT" << std::endl;
         mysql_autocommit(connection_.get(), false);
     }
 
     void mysql_connection::commit_transaction() {
+        std::cout << "MYSQL_COMMIT" << std::endl;
         if (mysql_commit(connection_.get()))
             throw sahara::exception::database_exception(5102, "Commit Transaction Failed");
     }
 
     void mysql_connection::refresh() {
         try {
-            std::cout << "Refreshing Connection" << std::endl;
+            std::cout << "MYSQL_MORE_RESULTS" << std::endl;
             if(auto val = mysql_more_results(connection_.get())){
                 if(val == 1){
                     mysql_next_result(connection_.get());
                 }
             }
+            std::cout << "MYSQL_QUERY" << std::endl;
             if (mysql_query(connection_.get(), "select 1;")) {
                 throw sahara::exception::database_exception(5103, mysql_error(connection_.get()));
             } else {
+                std::cout << "MYSQL_STORE_RESULT" << std::endl;
                 MYSQL_RES* res = mysql_store_result(connection_.get());
+                std::cout << "MYSQL_FREE_RESULT" << std::endl;
                 mysql_free_result(res);
                 last_active_ = std::chrono::steady_clock::now();
             }
@@ -69,6 +75,7 @@ namespace rosetta {
     }
 
     void mysql_connection::close() {
+        std::cout << "MYSQL_CLOSE" << std::endl;
         mysql_close(connection_.get());
     }
 }

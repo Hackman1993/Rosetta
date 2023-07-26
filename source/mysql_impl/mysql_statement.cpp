@@ -82,18 +82,22 @@ namespace rosetta{
 
     mysql_statement::mysql_statement(mysql_connection& connection, const std::string &sql, MYSQL_STMT* statement): sql_statement(connection, sql) {
         statement_ = std::shared_ptr<MYSQL_STMT>(statement, [&](MYSQL_STMT* stmt){
+            std::cout << "MYSQL_STMT_CLOSE" << std::endl;
             mysql_stmt_close(stmt);
         });
     }
 
     mysql_statement::~mysql_statement() {
+        std::cout << "MYSQL_STMT_FREE_RESULT" << std::endl;
         mysql_stmt_free_result(statement_.get());
 
     }
 
     void mysql_statement::execute() {
+        std::cout << "MYSQL_STMT_BIND_PARAM" << std::endl;
         if(mysql_stmt_bind_param(statement_.get(), bind_.data()))
             throw std::logic_error(mysql_stmt_error(statement_.get()));
+        std::cout << "MYSQL_STMT_EXECUTE" << std::endl;
         if(mysql_stmt_execute(statement_.get())){
             std::cout << mysql_stmt_error(statement_.get()) << std::endl;
             unsigned long long ** v = (unsigned long long **)bind_[0].buffer;
@@ -114,6 +118,7 @@ namespace rosetta{
     }
 
     void mysql_statement::reset() {
+        std::cout << "MYSQL_STMT_RESET" << std::endl;
         if(mysql_stmt_reset(statement_.get())){
             std::cout << mysql_stmt_error(statement_.get()) << std::endl;
         }
