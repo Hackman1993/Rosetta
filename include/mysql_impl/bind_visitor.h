@@ -6,7 +6,7 @@
 #define ROSETTA_BIND_VISITOR_H
 
 #include <mysql/mysql.h>
-#include "common/sql/support/sql_value.h"
+#include "../common/sql/support/sql_value.h"
 #include <iostream>
 
 namespace rosetta {
