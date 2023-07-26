@@ -20,6 +20,7 @@ using namespace std::chrono_literals;
 
 
 int main() {
+    sahara::log::initialize();
     try {
         rosetta::database_pool g_pool(10, "127.0.0.1", 3306, "root", "hl97005497--", "go_member_sys");
         g_pool.initialize<rosetta::mysql_connection>();

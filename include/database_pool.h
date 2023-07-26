@@ -34,7 +34,6 @@ namespace rosetta {
                         while (connections_.size() < max_conn_) {
                             std::unique_lock lock(connections_mutex_);
                             connections_.push_back(std::shared_ptr<Connection>(new Connection(host_, port_, username_, password_, database_), std::bind(&database_pool::deletor<Connection>, this, std::placeholders::_1)));
-                            //connections_.emplace_back(std::make_shared<Connection>(host_, port_, username_, password_, database_));
                         }
                     } catch (std::exception &e) {
                         LOG_MODULE_DEBUG("rosetta", "{}", e.what());
@@ -51,7 +50,6 @@ namespace rosetta {
             }
             std::unique_lock lock(connections_mutex_);
             connections_.push_back(std::shared_ptr<Connection>(connection, std::bind(&database_pool::deletor<Connection>, this, std::placeholders::_1)));
-            std::cout << "A Connection Has Been Reused" << std::endl;
         }
 
         template<typename Connection>
