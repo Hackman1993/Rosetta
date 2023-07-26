@@ -21,8 +21,7 @@ namespace rosetta {
             LOG_MODULE_DEBUG("rosetta", "{}", mysql_sqlstate(connection_.get()));
             return nullptr;
         }
-        statement_ = std::make_shared<mysql_statement>(*this, sql, statement);
-        return statement_;
+        return std::make_shared<mysql_statement>(*this, sql, statement);
     }
 
     mysql_connection::mysql_connection(const std::string &host, unsigned short port, const std::string &username, const std::string &password, const std::string &database) : database_connection(host, port, username, password, database) {

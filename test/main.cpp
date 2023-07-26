@@ -38,7 +38,7 @@ int main() {
 
 
             auto connection = g_pool.get_connection<rosetta::mysql_connection>();
-            auto statement = connection->prepared_statement(builder.compile());
+            std::shared_ptr<rosetta::mysql_statement> statement = connection->prepared_statement(builder.compile());
             statement->bind_param(std::string("1fdaf550-67b0-4c6e-a821-6b9e6842545e"));
             if (!permissions.empty()) {
                 for (auto &permission: permissions) {
@@ -48,9 +48,6 @@ int main() {
             statement->execute();
             auto result = statement->get();
             if (!permissions.empty() && permissions.size() != result->count()) {
-            }
-            if (auto row = result->next()) {
-
             }
         }
         {

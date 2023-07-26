@@ -17,7 +17,6 @@ namespace rosetta {
         this->close_();
     };
 
-
   protected:
       database_connection_base& connection_;
   };
