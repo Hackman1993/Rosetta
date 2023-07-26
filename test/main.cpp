@@ -15,7 +15,7 @@
 
 #include <sahara/log/log.h>
 #include <spdlog/sinks/daily_file_sink.h>
-
+#include "mysql_impl/mysql_statement.h"
 using namespace std::chrono_literals;
 
 
