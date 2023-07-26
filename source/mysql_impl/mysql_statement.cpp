@@ -126,6 +126,8 @@ namespace rosetta{
     }
 
     void mysql_statement::close_() {
+        std::cout << "MYSQL_STMT_RESET" << std::endl;
+        mysql_stmt_close(statement_.get());
 
     }
 
