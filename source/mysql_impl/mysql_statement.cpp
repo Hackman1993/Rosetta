@@ -87,6 +87,7 @@ namespace rosetta{
     }
 
     mysql_statement::~mysql_statement() {
+        mysql_stmt_free_result(statement_.get());
 
     }
 

@@ -49,6 +49,9 @@ int main() {
             auto result = statement->get();
             if (!permissions.empty() && permissions.size() != result->count()) {
             }
+            if (auto row = result->next()) {
+
+            }
         }
         {
             std::vector<std::string> permissions = {"sys.role.create"};
