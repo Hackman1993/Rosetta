@@ -14,7 +14,7 @@ namespace rosetta {
 
     class mysql_result : public sql_result {
     public:
-        mysql_result(std::shared_ptr<MYSQL_STMT> statement);
+        mysql_result(std::shared_ptr<MYSQL_STMT>& statement);
         size_t count() override;
         std::shared_ptr<sql_row> next() override;
         virtual ~mysql_result();
@@ -33,7 +33,7 @@ namespace rosetta {
     protected:
         size_t column_count() override;
 
-        std::shared_ptr<MYSQL_STMT> statement_;
+        std::shared_ptr<MYSQL_STMT>& statement_;
         std::unordered_map<std::string, std::uint16_t> columns_;
         MYSQL_RES *column_meta_;
         std::shared_ptr<std::uint64_t> row_count_ = nullptr;
