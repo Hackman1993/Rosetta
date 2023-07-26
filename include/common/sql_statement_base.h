@@ -29,7 +29,6 @@ namespace rosetta {
 //    virtual void bind_param(std::uint32_t param_id, rosetta::long_double data) = 0;
 //    virtual void bind_param(std::uint32_t param_id, rosetta::unsigned_integer data) = 0;
   protected:
-      virtual void close_() {};
       sahara::string sql_;
   };
 

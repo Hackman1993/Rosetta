@@ -13,9 +13,7 @@ namespace rosetta {
   class sql_statement : public sql_statement_base{
   public:
     sql_statement(database_connection_base& connection, const std::string& sql): sql_statement_base(sql), connection_(connection){}
-    ~sql_statement() override{
-        this->close_();
-    };
+    ~sql_statement() override{};
 
   protected:
       database_connection_base& connection_;

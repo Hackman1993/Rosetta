@@ -39,7 +39,6 @@ namespace rosetta {
         ~mysql_statement() override;
 
     protected:
-        void close_() override;
 
     private:
         std::shared_ptr<MYSQL_STMT> statement_;
