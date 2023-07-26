@@ -39,7 +39,7 @@ namespace rosetta {
 
         virtual void commit_transaction() = 0;
 
-        virtual std::shared_ptr<sql_statement_base> prepared_statement(const std::string &sql) = 0;
+
 
     protected:
         virtual void refresh_worker() {
