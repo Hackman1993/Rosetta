@@ -4,12 +4,12 @@
 
 #ifndef ROSETTA_MYSQL_CONNECTION_H
 #define ROSETTA_MYSQL_CONNECTION_H
+#include "mysql_statement.h"
 #include "../common/database_connection.h"
 #include <utility>
+
 struct MYSQL;
 namespace rosetta {
-
-  class mysql_statement;
   class mysql_connection : public database_connection<mysql_statement>{
   public:
     mysql_connection(const std::string& host, unsigned short port, const std::string& username, const std::string& password, const std::string& database);
