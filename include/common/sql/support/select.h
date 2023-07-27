@@ -24,7 +24,6 @@ namespace rosetta::core {
 
         select& inner_join(const alia& table, const std::function<void (joins&)>& callback);
         select& left_join(const alia& table, const std::function<void (joins&)>& callback);
-        select& left_join(std::string table, const std::function<void (joins&)>& callback);
     protected:
         std::vector<joins> joins_;
     };

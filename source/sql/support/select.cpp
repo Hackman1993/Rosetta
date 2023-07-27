@@ -95,14 +95,5 @@ namespace rosetta {
             joins_.emplace_back(table, JOIN_TYPE_LEFT, callback);
             return *this;
         }
-
-        select &select::left_join(std::string table, const std::function<void(joins &)> &callback) {
-            joins_.emplace_back(alia{std::move(table), ""}, JOIN_TYPE_LEFT, callback);
-            return *this;
-        }
-
-
-
-
     } // rosetta
 } // core
