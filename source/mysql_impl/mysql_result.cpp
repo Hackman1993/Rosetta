@@ -210,8 +210,8 @@ std::shared_ptr<rosetta::sql_row> rosetta::mysql_result::next() {
         memset(buffer.get(), 0, bind.buffer_length);
         bind.buffer = buffer.get();
         auto &data = meta_.emplace_back(buffer, 0, false);
-        bind.length = &data.length_;
-        bind.is_null = &data.is_null_;
+        bind.length = data.length_.get();
+        bind.is_null = data.is_null_.get();
         binder_.push_back(bind);
     }
     if(mysql_stmt_bind_result(statement_.get(), binder_.data()))

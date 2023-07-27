@@ -12,10 +12,10 @@
 namespace rosetta {
 
     struct mysql_cell_data{
-        mysql_cell_data(std::shared_ptr<unsigned char> data, unsigned long length, bool is_null) : data_(std::move(data)), length_(length), is_null_(is_null) {}
+        mysql_cell_data(std::shared_ptr<unsigned char> data, unsigned long length, bool is_null) : data_(std::move(data)), length_(std::make_shared<unsigned long>(length)), is_null_(std::make_shared<bool>(is_null)) {}
         std::shared_ptr<unsigned char> data_;
-        unsigned long length_;
-        bool is_null_ = false;
+        std::shared_ptr<unsigned long> length_;
+        std::shared_ptr<bool> is_null_;
     };
 
     class mysql_row : public sql_row{

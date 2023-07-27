@@ -21,7 +21,7 @@ namespace rosetta {
         if(column >= bind_.size())
             throw std::out_of_range("column out of range");
         core::sql_param_value value = nullptr;
-        if(meta_[column].is_null_)
+        if(*meta_[column].is_null_)
             return value;
         switch(bind_[column].buffer_type)
         {

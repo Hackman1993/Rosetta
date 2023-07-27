@@ -26,29 +26,18 @@ int main() {
         g_pool.initialize<rosetta::mysql_connection>();
         std::this_thread::sleep_for(3s);
         {
-            std::vector<std::string> permissions = {"sys.role.create"};
-            rosetta::core::select builder({"code", "c.fn_user_id", "token"});
-            builder.from({{"t_permission", "a"}}).inner_join({"t_mid_role_permission", "b"}, [&](auto &join) {
-                join.on("a.permission_id", "=", "b.fn_permission_id");
-            }).inner_join({"t_mid_user_role", "c"}, [&](auto &join) {
-                join.on("b.fn_role_id", "=", "c.fn_role_id");
-            }).inner_join({"t_user_access_token", "d"}, [&](auto &join) {
-                join.on("c.fn_user_id", "=", "d.fn_user_id");
-            }).where("token", "=", "?");
-            builder.where_in("code", permissions.size());
-
-
             auto connection = g_pool.get_connection<rosetta::mysql_connection>();
-            std::shared_ptr<rosetta::mysql_statement> statement = connection->prepared_statement(builder.compile());
-            statement->bind_param(std::string("1fdaf550-67b0-4c6e-a821-6b9e6842545e"));
-            if (!permissions.empty()) {
-                for (auto &permission: permissions) {
-                    statement->bind_param(permission);
-                }
-            }
+            rosetta::core::select user_builder({"user_id", "username", "email", "real_name", "phone_number", "passport_no", "photo_url", "avatar_url"});
+            user_builder.from({{"t_user", ""}}).where("user_id", "=", "?");
+            auto statement = connection->prepared_statement(user_builder.compile());
+            statement->bind_param(2);
             statement->execute();
+            statement->bind_param(std::string("1fdaf550-67b0-4c6e-a821-6b9e6842545e"));
             auto result = statement->get();
-            if (!permissions.empty() && permissions.size() != result->count()) {
+            boost::json::object user;
+            while(auto row = result->next()) {
+                auto col0 = row->get_column(3);
+                auto col1 = row->get_column(1);
             }
         }
         {
