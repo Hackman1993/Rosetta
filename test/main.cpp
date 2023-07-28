@@ -34,7 +34,7 @@ int main() {
                 join.on("b.fn_role_id", "=", "c.fn_role_id");
             }).inner_join({"t_user_access_token", "d"}, [&](auto& join){
                 join.on("c.fn_user_id", "=", "d.fn_user_id");
-            }).where("token", "=", "?");
+            }).where("token", "=", "?").order_asc({"fn_menu_id"});
             auto sql = builder.compile();
 
             rosetta::core::select user_builder({"user_id", "username", "email", "real_name", "phone_number", "passport_no", "photo_url", "avatar_url"});

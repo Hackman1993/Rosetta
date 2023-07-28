@@ -48,7 +48,8 @@ namespace rosetta {
                 ss << "WHERE " << wheres_.compile();
             }
 
-            if(orderby_.empty()){
+            if(!orderby_.empty()){
+                ss << "ORDER BY ";
                 first = true;
                 for(auto &column: orderby_){
                     if(first)
