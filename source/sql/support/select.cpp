@@ -48,6 +48,17 @@ namespace rosetta {
                 ss << "WHERE " << wheres_.compile();
             }
 
+            if(orderby_.empty()){
+                first = true;
+                for(auto &column: orderby_){
+                    if(first)
+                        first = false;
+                    else ss << ",";
+                    ss << column;
+                }
+                ss << (asc_? " ASC ":" DESC ");
+            }
+
             return ss.str();
         }
 
