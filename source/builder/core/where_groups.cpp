@@ -10,8 +10,13 @@ namespace rosetta::core {
 
         if (!groups_.empty()) {
 
+            bool first = true;
             for (auto &where_group: groups_) {
-                ss << (where_group.is_or_? "OR ":"WHERE ");
+                if (first) {
+                    first = false;
+                } else {
+                    ss << (where_group.is_or_? "OR ":"AND ");
+                }
                 ss << where_group.compile();
             }
         }

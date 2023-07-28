@@ -45,7 +45,7 @@ namespace rosetta {
             }
 
             if(!wheres_.empty()){
-                ss << wheres_.compile() << " ";
+                ss << "WHERE " << wheres_.compile();
             }
 
             return ss.str();

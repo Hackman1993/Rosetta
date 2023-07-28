@@ -27,9 +27,19 @@ int main() {
         std::this_thread::sleep_for(3s);
         {
             auto connection = g_pool.get_connection<rosetta::mysql_connection>();
+            rosetta::core::select builder({"code", "c.fn_user_id", "token"});
+            builder.from({{"t_permission", "a"}}).inner_join({"t_mid_role_permission", "b"},[&](auto& join){
+                join.on("a.permission_id", "=", "b.fn_permission_id");
+            }).inner_join({"t_mid_user_role", "c"}, [&](auto& join){
+                join.on("b.fn_role_id", "=", "c.fn_role_id");
+            }).inner_join({"t_user_access_token", "d"}, [&](auto& join){
+                join.on("c.fn_user_id", "=", "d.fn_user_id");
+            }).where("token", "=", "?");
+            auto sql = builder.compile();
+
             rosetta::core::select user_builder({"user_id", "username", "email", "real_name", "phone_number", "passport_no", "photo_url", "avatar_url"});
             user_builder.from({{"t_user", ""}}).where("user_id", "=", "?").or_("fn_user_id", "is", "null");
-            auto sql = user_builder.compile();
+
             auto statement = connection->prepared_statement(user_builder.compile());
             statement->bind_param(2);
             statement->execute();
