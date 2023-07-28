@@ -74,8 +74,8 @@
 #include <utility>
 #include <iostream>
 
-#include "mysql_impl/mysql_result.h"
-#include "mysql_impl/mysql_row.h"
+#include "pool/mysql_impl/mysql_result.h"
+#include "pool/mysql_impl/mysql_row.h"
 
 rosetta::mysql_result::mysql_result(std::shared_ptr<MYSQL_STMT>& statement) : statement_(statement){
     column_meta_ = mysql_stmt_result_metadata(statement_.get());

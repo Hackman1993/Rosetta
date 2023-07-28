@@ -4,7 +4,7 @@
 
 #include <utility>
 #include <sstream>
-#include "common/sql/support/insert.h"
+#include "builder/insert.h"
 
 namespace rosetta::core {
     insert::insert(std::string table) : use_table(std::move(table)) {}

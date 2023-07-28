@@ -1,6 +1,5 @@
-#include <boost/polymorphic_cast.hpp>
-#include "mysql_impl/mysql_connection.h"
-#include "mysql_impl/mysql_statement.h"
+#include "pool/mysql_impl/mysql_connection.h"
+#include "pool/mysql_impl/mysql_statement.h"
 #include <sahara/exception/database_exception.h>
 #include <sstream>
 #include <mysql/mysql.h>

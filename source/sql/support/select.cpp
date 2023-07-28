@@ -4,8 +4,7 @@
 
 #include <sstream>
 #include <utility>
-#include "common/sql/support/select.h"
-#include "common/sql/support/operate_base.h"
+#include "builder/select.h"
 namespace rosetta {
     namespace core {
         std::string select::compile() {
@@ -45,32 +44,19 @@ namespace rosetta {
                 }
             }
 
-            first = true;
-            for(auto &where : wheres_){
-                if(first){
-                    ss << "WHERE ";
-                    first = false;
-                }
-                else {
-                    ss << "AND ";
-                }
-                ss << where->compile();
+            if(!wheres_.empty()){
+                ss << wheres_.compile() << " ";
             }
 
             return ss.str();
         }
 
-        select &select::where(const std::string &column, const std::string &operate, const std::string &value) {
-            auto where_condition = std::make_shared<condition>(column, operate, value);
-            wheres_.emplace_back(where_condition);
-            return *this;
-        }
-
-        select &select::where_in(const std::string &column, std::uint32_t value) {
-            auto where_condition = std::make_shared<where_in_>(column, value);
-            wheres_.emplace_back(where_condition);
-            return *this;
-        }
+//        select &select::where(const std::string &column, const std::string &operate, const std::string &value) {
+//
+////            auto where_condition = std::make_shared<condition::condition>(column, operate, value);
+////            wheres_.emplace_back(where_condition);
+//            return *this;
+//        }
 
         select::select(std::initializer_list<std::string> columns) : use_column_alias(columns), use_tables(std::vector<alia>{}){}
 
@@ -80,20 +66,10 @@ namespace rosetta {
             for(auto &table: tables) tables_.push_back(table);
             return *this;
         }
-
-        select &select::inner_join(const alia& table, const std::function<void(joins &)> &callback) {
-            joins_.emplace_back(table, JOIN_TYPE_INNER, callback);
-            return *this;
-        }
-
         select &select::distinct(bool distinct){
             distinct_ = distinct;
             return *this;
         }
 
-        select &select::left_join(const alia& table, const std::function<void(joins &)> &callback) {
-            joins_.emplace_back(table, JOIN_TYPE_LEFT, callback);
-            return *this;
-        }
     } // rosetta
 } // core

@@ -2,7 +2,7 @@
 // Created by Hackman.Lo on 7/17/2023.
 //
 
-#include "common/sql/support/builder.h"
+#include "builder/builder.h"
 
 namespace rosetta {
     namespace core {

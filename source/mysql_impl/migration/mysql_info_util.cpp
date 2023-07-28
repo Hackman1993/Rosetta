@@ -2,7 +2,7 @@
 // Created by Hackman.Lo on 4/21/2023.
 //
 
-#include "mysql_impl/migration/mysql_info_util.h"
+#include "migration/mysql_impl/mysql_info_util.h"
 
 namespace rosetta {
     namespace migration {

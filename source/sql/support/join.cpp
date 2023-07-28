@@ -4,7 +4,7 @@
 
 #include <sstream>
 #include <utility>
-#include "common/sql/support/join.h"
+#include "builder/join.h"
 
 namespace rosetta::core {
     std::string joins::compile() {
@@ -24,15 +24,8 @@ namespace rosetta::core {
                 break;
         }
         ss << table_.name_ << (table_.alias_.empty()? " ":" AS " + table_.alias_ + " ");
-        bool first = true;
-        for(auto & on : ons_){
-            if(first){
-                ss << "ON ";
-                first = false;
-            }else{
-                ss << "AND ";
-            }
-            ss << on->compile();
+        if(!ons_.empty()){
+            ss << "ON " << ons_.compile();
         }
         return ss.str();
     }
@@ -43,11 +36,6 @@ namespace rosetta::core {
 
     joins::joins(const std::string &table, E_JOIN_TYPE type, const std::function<void(joins &)> &callback) : use_table(table), type_(type), callback_(callback) {
 
-    }
-
-    joins &joins::on(const std::string &column, const std::string &operate, const std::string &value) {
-        ons_.emplace_back(std::make_shared<condition>(column, operate, value));
-        return *this;
     }
 
 } // core

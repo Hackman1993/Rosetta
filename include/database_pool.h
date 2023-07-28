@@ -13,7 +13,7 @@
 #include <boost/polymorphic_pointer_cast.hpp>
 #include <utility>
 #include <sahara/log/log.h>
-#include "common/database_connection_base.h"
+#include "pool/database_connection_base.h"
 namespace rosetta {
     using namespace std::chrono_literals;
 

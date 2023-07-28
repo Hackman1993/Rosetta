@@ -3,8 +3,7 @@
 //
 
 #include <sstream>
-#include "common/sql/support/condition.h"
-#include "common/sql/support/update.h"
+#include "builder/update.h"
 
 namespace rosetta::core {
     std::string update::compile() {
@@ -20,8 +19,8 @@ namespace rosetta::core {
             else first = false;
             ss << column << " = ? ";
         }
-        for (auto &where: wheres_) {
-            ss << where->compile();
+        if(!wheres_.empty()){
+            ss << "WHERE " << wheres_.compile();
         }
         return ss.str();
     }
@@ -32,12 +31,6 @@ namespace rosetta::core {
 
     update &update::set(const std::vector<std::string> &columns) {
         columns_ = columns;
-        return *this;
-    }
-
-    update &update::where(const std::string& column, const std::string& operate, const std::string& value) {
-        auto where_condition = std::make_shared<condition>(column, operate, value);
-        wheres_.emplace_back(where_condition);
         return *this;
     }
 } // core

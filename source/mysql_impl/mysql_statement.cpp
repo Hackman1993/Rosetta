@@ -73,9 +73,9 @@
 //  }
 //} // rosetta
 
-#include "mysql_impl/mysql_statement.h"
-#include "mysql_impl/mysql_connection.h"
-#include "mysql_impl/mysql_result.h"
+#include "pool/mysql_impl/mysql_statement.h"
+#include "pool/mysql_impl/mysql_connection.h"
+#include "pool/mysql_impl/mysql_result.h"
 #include <iostream>
 namespace rosetta{
 
@@ -123,7 +123,5 @@ namespace rosetta{
         }
 
     }
-
-
 }
 

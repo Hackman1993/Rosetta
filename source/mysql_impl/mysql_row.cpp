@@ -2,7 +2,7 @@
 // Created by Hackman.Lo on 7/20/2023.
 //
 
-#include "mysql_impl/mysql_row.h"
+#include "pool/mysql_impl/mysql_row.h"
 
 namespace rosetta {
     size_t mysql_row::column_count() {

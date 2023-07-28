@@ -1,21 +1,21 @@
 #include <iostream>
 //#include <rosetta.h>
 #include <boost/url.hpp>
-#include <common/sql/support/insert.h>
-#include <common/sql/support/update.h>
-#include "common/sql/support/del.h"
-#include "common/sql/support/select.h"
+#include "builder/insert.h"
+#include "builder/update.h"
+#include "builder/del.h"
+#include "builder/select.h"
 #include "database_pool.h"
-#include "mysql_impl/mysql_connection.h"
 #include <mysql/mysql.h>
-#include <common/sql_row.h>
+#include "pool/sql_row.h"
 #include <boost/json.hpp>
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
 #include <sahara/log/log.h>
 #include <spdlog/sinks/daily_file_sink.h>
-#include "mysql_impl/mysql_statement.h"
+#include "pool/mysql_impl/mysql_statement.h"
+#include "pool/mysql_impl/mysql_connection.h"
 using namespace std::chrono_literals;
 
 
@@ -28,7 +28,8 @@ int main() {
         {
             auto connection = g_pool.get_connection<rosetta::mysql_connection>();
             rosetta::core::select user_builder({"user_id", "username", "email", "real_name", "phone_number", "passport_no", "photo_url", "avatar_url"});
-            user_builder.from({{"t_user", ""}}).where("user_id", "=", "?");
+            user_builder.from({{"t_user", ""}}).where("user_id", "=", "?").or_("fn_user_id", "is", "null");
+            auto sql = user_builder.compile();
             auto statement = connection->prepared_statement(user_builder.compile());
             statement->bind_param(2);
             statement->execute();
