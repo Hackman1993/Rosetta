@@ -12,9 +12,10 @@
 #include "use/use_distinct.h"
 #include "use/use_column_alias.h"
 #include "use/use_joins.h"
-
+#include "use/use_orderby.h"
 namespace rosetta::core {
-    class select : public sql_base, public use_tables, public use_limit, public use_distinct, public use_column_alias, public use_where<select>, public use_joins<select>{
+    class select : public sql_base, public use_tables, public use_limit, public use_distinct,
+            public use_column_alias, public use_where<select>, public use_joins<select>, public use_orderby<select>{
     public:
         select(std::initializer_list<std::string> columns);
         select(std::vector<alia> columns);
