@@ -26,7 +26,8 @@ namespace rosetta {
         }
         connection = mysql_real_connect(connection, host_, username_, password_, database_, port_, nullptr, 0);
         if (!connection)
-            throw sahara::exception::database_exception(5100, std::format("Connection Failed to {}:{} with username:{} and password:{} to database:{} with error:{}", host_, port_, username_, password_, database_, mysql_error(connection)));
+            std::string str = std::format("Connection Failed to {}:{} with username:{} and password:{} to database:{} with error:{}", host_, port_, username_, password_, database_, mysql_error(connection));
+            throw sahara::exception::database_exception(5100, str);
         connection_ = std::shared_ptr<MYSQL>(connection, [](MYSQL *connection) {
             mysql_close(connection);
         });
