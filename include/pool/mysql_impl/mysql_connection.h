@@ -4,7 +4,7 @@
 
 #ifndef ROSETTA_MYSQL_CONNECTION_H
 #define ROSETTA_MYSQL_CONNECTION_H
-#include "pool/database_connection.h"
+#include "../pool/database_connection.h"
 #include <utility>
 
 struct MYSQL;
