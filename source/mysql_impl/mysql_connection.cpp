@@ -15,18 +15,18 @@ namespace rosetta {
         if(!statement) return nullptr;
 
         if(mysql_stmt_prepare(statement, sql.data(), sql.length()))
-            throw sahara::exception::database_exception(mysql_stmt_errno(statement), mysql_stmt_error(statement));
+            throw sahara::exception::database_exception(mysql_stmt_error(statement), mysql_stmt_errno(statement));
         return std::make_shared<mysql_statement>(*this, sql, statement);
     }
 
     mysql_connection::mysql_connection(const std::string &host, unsigned short port, const std::string &username, const std::string &password, const std::string &database) : database_connection(host, port, username, password, database) {
         MYSQL *connection = mysql_init(nullptr);
         if (!connection){
-            throw sahara::exception::database_exception(5100, "Connection Initialize Failed");
+            throw sahara::exception::database_exception("Connection Initialize Failed", 5100);
         }
         connection = mysql_real_connect(connection, host_, username_, password_, database_, port_, nullptr, 0);
         if (!connection){
-            throw sahara::exception::database_exception(5100, mysql_error(connection));
+            throw sahara::exception::database_exception(mysql_error(connection), 5100);
         }
         connection_ = std::shared_ptr<MYSQL>(connection, [](MYSQL *connection) {
             mysql_close(connection);
@@ -40,7 +40,7 @@ namespace rosetta {
 
     void mysql_connection::commit_transaction() {
         if (mysql_commit(connection_.get()))
-            throw sahara::exception::database_exception(mysql_errno(connection_.get()), "Commit Transaction Failed");
+            throw sahara::exception::database_exception("Commit Transaction Failed", mysql_errno(connection_.get()));
     }
 
     void mysql_connection::refresh() {
@@ -51,7 +51,7 @@ namespace rosetta {
                 }
             }
             if (mysql_query(connection_.get(), "select 1")) {
-                throw sahara::exception::database_exception(mysql_errno(connection_.get()), mysql_error(connection_.get()));
+                throw sahara::exception::database_exception(mysql_error(connection_.get()), mysql_errno(connection_.get()));
             } else {
                 MYSQL_RES* res = mysql_store_result(connection_.get());
                 mysql_free_result(res);
