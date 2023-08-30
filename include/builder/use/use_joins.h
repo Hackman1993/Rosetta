@@ -4,7 +4,7 @@
 
 #ifndef ROSETTA_USE_JOINS_H
 #define ROSETTA_USE_JOINS_H
-#include "builder/join.h"
+#include "../join.h"
 namespace rosetta {
     namespace core {
         template <typename T>
