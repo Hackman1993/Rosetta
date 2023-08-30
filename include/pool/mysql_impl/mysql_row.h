@@ -8,7 +8,7 @@
 #include <mysql/mysql.h>
 
 #include <utility>
-#include "pool/sql_row.h"
+#include "../sql_row.h"
 namespace rosetta {
 
     struct mysql_cell_data{

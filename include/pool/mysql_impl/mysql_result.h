@@ -5,7 +5,7 @@
 #ifndef ROSETTA_MYSQL_RESULT_H
 #define ROSETTA_MYSQL_RESULT_H
 
-#include "pool/sql_result.h"
+#include "../sql_result.h"
 #include <string>
 #include <unordered_map>
 #include <mysql/mysql.h>

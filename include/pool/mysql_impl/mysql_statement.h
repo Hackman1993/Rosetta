@@ -5,7 +5,7 @@
 #ifndef ROSETTA_MYSQL_STATEMENT_H
 #define ROSETTA_MYSQL_STATEMENT_H
 
-#include "pool/sql_statement.h"
+#include "../sql_statement.h"
 #include <unordered_map>
 #include "bind_visitor.h"
 namespace rosetta {
